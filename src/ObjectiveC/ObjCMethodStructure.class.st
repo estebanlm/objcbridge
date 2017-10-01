@@ -63,6 +63,11 @@ ObjCMethodStructure >> method_types: anObject [
 ]
 
 { #category : #accessing }
+ObjCMethodStructure >> name [
+	^ self method_name readStringUTF8 asSymbol
+]
+
+{ #category : #accessing }
 ObjCMethodStructure >> types [
-	^ self method_types readString
+	^ self method_types readStringUTF8
 ]

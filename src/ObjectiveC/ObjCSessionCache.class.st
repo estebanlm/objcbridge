@@ -2,17 +2,18 @@ Class {
 	#name : #ObjCSessionCache,
 	#superclass : #Object,
 	#instVars : [
-		'selectors'
+		'selectors',
+		'methods'
 	],
-	#classInstVars : [
-		'current'
+	#classVars : [
+		'Current'
 	],
 	#category : #ObjectiveC
 }
 
 { #category : #accessing }
 ObjCSessionCache class >> current [
-	^ current ifNil: [ current := self basicNew initialize ]
+	^ Current ifNil: [ Current := self basicNew initialize ]
 ]
 
 { #category : #'class initialization' }
@@ -28,12 +29,21 @@ ObjCSessionCache class >> new [
 { #category : #'system startup' }
 ObjCSessionCache class >> shutDown: quitting [
 	quitting ifFalse: [ ^ self ].
-	current := nil
+	Current := nil
 ]
 
 { #category : #initialization }
 ObjCSessionCache >> initialize [
 	super initialize.
+	selectors := Dictionary new.
+	methods := Dictionary new
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> methodAt: aSymbol ifAbsentPut: aBlock [
+	^ methods
+		at: aSymbol 
+		ifAbsentPut: aBlock
 ]
 
 { #category : #accessing }

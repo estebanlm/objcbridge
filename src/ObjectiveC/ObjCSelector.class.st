@@ -17,3 +17,13 @@ ObjCSelector class >> register: aSymbol [
 ObjCSelector class >> sel_registerName: str [
 	^ self ffiCall: #(SEL sel_registerName(const char *str))
 ]
+
+{ #category : #accessing }
+ObjCSelector >> name [
+	^ self ffiCall: #(char *sel_getName(self))
+]
+
+{ #category : #private }
+ObjCSelector >> sel_getName [
+	^ self ffiCall: #(char *sel_getName(self))
+]

@@ -10,7 +10,7 @@ Class {
 { #category : #private }
 ObjCLibrary class >> createObjCTypes [
 	^ Dictionary newFromPairs: #(
-		Method 	ObjCMethodStructure
+		Method 	ObjCMethod
 		Class 		ObjCClass
 		SEL 		ObjCSelector
 		id 			oop
@@ -27,7 +27,7 @@ ObjCLibrary class >> ffiBindingOf: aName [
 
 { #category : #'class initialization' }
 ObjCLibrary class >> initialize [
-	ObjCTypes := self createObjCTypes.
+	ObjCTypes := self createObjCTypes
 ]
 
 { #category : #'accessing platform' }

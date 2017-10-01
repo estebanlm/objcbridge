@@ -49,5 +49,5 @@ ObjCClass >> name [
 
 { #category : #private }
 ObjCClass >> objCMethodForSelector: aSelector [
-	self class_getClassMethod: aSelector asObjCSelector
+	^ self class_getClassMethod: aSelector asObjCSelector
 ]
