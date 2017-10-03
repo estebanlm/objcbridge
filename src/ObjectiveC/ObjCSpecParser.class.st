@@ -118,9 +118,8 @@ ObjCSpecParser >> parseArguments [
 { #category : #parsing }
 ObjCSpecParser >> parseMethod: aMethod [
 	^ FFIFunctionSpec new
-		functionName: aMethod name;
-		returnType: (self parseType: aMethod returnType first);
-		arguments: (aMethod argumentTypes collect: [ :each | each ifNotNil: [ self parseType: each first ] ]);
+		returnType: (self parseType: aMethod returnType);
+		arguments: (aMethod argumentTypes collect: [ :each | each ifNotNil: [ self parseType: each ] ]);
 		yourself.
 	
 ]
@@ -131,24 +130,11 @@ ObjCSpecParser >> parseReturn [
 ]
 
 { #category : #parsing }
-ObjCSpecParser >> parseType [
-	| code type |
-	
-	[ 
-		stream atEnd not 
-		and: [ TypeQualifiers includes: (code := stream next) ] ] 
-	whileTrue.
-	type := MethodTypeMap at: code. "This will fail in case of a structure"
+ObjCSpecParser >> parseType: aString [
+	| ch typeStream |
+	typeStream := aString readStream.
+	[ TypeQualifiers includes: (ch := typeStream next) ] whileTrue. 
 	^ FFICallout new 
 		requestor: ObjCLibrary;
-		resolveType: type
-]
-
-{ #category : #parsing }
-ObjCSpecParser >> parseType: aCharacter [
-	| type |
-	type := MethodTypeMap at: aCharacter.
-	^ FFICallout new 
-		requestor: ObjCLibrary;
-		resolveType: type
+		resolveType: (MethodTypeMap at: ch)
 ]

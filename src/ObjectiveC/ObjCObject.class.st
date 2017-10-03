@@ -27,9 +27,11 @@ ObjCObject >> doesNotUnderstand: aMessage [
 	
 	objCMethod := self objCMethodForSelector: aMessage selector.
 	objCMethod ifNil: [ ^ super doesNotUnderstand: aMessage ].
-	^ (self methodFromObjCMethod: objCMethod)
+	^ (ObjCSessionCache current
+		methodAt: objCMethod getHandle asInteger
+		ifAbsentPut: [ ObjCCalloutMethodBuilder buildMethod: objCMethod ])
 		valueWithReceiver: self
-		arguments: ({ self. objCMethod method_name }, (aMessage arguments))	
+		arguments: ({ self. objCMethod method_getName }, (aMessage arguments))
 
 ]
 
@@ -42,11 +44,6 @@ ObjCObject >> innerStructure [
 { #category : #accessing }
 ObjCObject >> isa [
 	^ self innerStructure isa
-]
-
-{ #category : #private }
-ObjCObject >> methodFromObjCMethod: method [
-	^ ObjCCalloutMethodBuilder new buildMethod: method
 ]
 
 { #category : #private }
