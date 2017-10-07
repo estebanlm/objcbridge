@@ -6,6 +6,6 @@ String >> inObjC [
 ]
 
 { #category : #'*ObjectiveC' }
-String >> inObjCFramework: frameworkName [ "<String> ^<ObjectiveCClassAlien>"
+String >> inObjCFramework: frameworkName [
 	^ ObjCClass lookup: self inFramework: frameworkName
 ]
