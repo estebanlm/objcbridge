@@ -3,6 +3,9 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TObjCLibrary',
 	#classTraits : 'TObjCLibrary classTrait',
+	#instVars : [
+		'isa'
+	],
 	#category : #ObjectiveC
 }
 
@@ -12,8 +15,8 @@ ObjCObject class >> lookup: symbol inLibrary: libraryName [
 ]
 
 { #category : #private }
-ObjCObject >> class_getInstanceMethod: name [
-	^ self ffiCall: #(Method class_getInstanceMethod(self, SEL name))
+ObjCObject >> class: aClass getInstanceMethod: aName [
+	^ self ffiCall: #(Method class_getInstanceMethod(Class aClass, SEL aName))
 ]
 
 { #category : #accessing }
@@ -44,17 +47,21 @@ ObjCObject >> doesNotUnderstand: aMessage [
 { #category : #private }
 ObjCObject >> innerStructure [
 	"The inner structure from this object"
-	^ ObjCObjectStructure fromHandle: (self getHandle asExternalAddress pointerAt: 1)
+	^ ObjCObjectStructure fromHandle: (ExternalData 
+		fromHandle: (self getHandle asExternalAddress pointerAt: 1) 
+		type: ExternalType void asPointerType)
 ]
 
 { #category : #accessing }
 ObjCObject >> isa [
-	^ self innerStructure isa
+	^ isa ifNil: [ isa := self innerStructure isa ]
 ]
 
 { #category : #private }
 ObjCObject >> objCMethodForSelector: aSelector [
-	^ self class_getInstanceMethod: aSelector asObjCSelector
+	^ self 
+		class: self isa 
+		getInstanceMethod: aSelector asObjCSelector
 ]
 
 { #category : #'as yet unclassified' }

@@ -17,7 +17,7 @@ ObjCCalloutMethodBuilder class >> buildMethod: objCMethod [
 ObjCCalloutMethodBuilder >> buildMethod: objCMethod [
 	| spec |
 	spec := ObjCSpecParser new parseMethod: objCMethod.
-	spec functionName: 'method_invoke'.
+	spec functionName: 'objc_msgSend'.
 	^ self generateMethodFromSpec: spec.
 
 ]

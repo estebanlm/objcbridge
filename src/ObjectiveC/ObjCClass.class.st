@@ -32,14 +32,17 @@ ObjCClass class >> lookup: globalOrClassName inLibrary: libraryName [
 ]
 
 { #category : #private }
-ObjCClass >> class_getClassMethod: name [
-	^ self ffiCall: #(Method class_getClassMethod(self, SEL name))
+ObjCClass >> class_getClassMethod: aName [
+	^ self ffiCall: #(Method class_getClassMethod(self, SEL aName))
 ]
 
 { #category : #private }
 ObjCClass >> innerStructure [
 	"The inner structure from this class"
-	^ ObjCClassStructure fromHandle: (self getHandle asExternalAddress pointerAt: 1)
+	^ ObjCClassStructure fromHandle: (ExternalData 
+			fromHandle: (self getHandle asExternalAddress pointerAt: 1) 
+			type: ExternalType void asPointerType)
+	
 ]
 
 { #category : #accessing }
