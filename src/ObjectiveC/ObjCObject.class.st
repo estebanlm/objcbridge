@@ -35,7 +35,6 @@ ObjCObject >> doesNotUnderstand: aMessage [
 				methodClass: self class;
 				yourself ].
 	arguments := ({ self. objCMethod method_getName }, (aMessage arguments)).
-	arguments crLog.
 	^ shadowMethod 
 		valueWithReceiver: self
 		arguments: arguments
