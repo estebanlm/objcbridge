@@ -35,22 +35,21 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 	"Builds a method call"
 	builder
 		numArgs: numArgs;
-		addTemps: #(result), ((1 to: numArgs) collect: [ :index | 'arg', index asString ]).
+		addTemps: ((1 to: numArgs) collect: [ :index | 'arg', index asString ]), #(result).
 	
 	"save ffi call as literal"
 	builder pushLiteral: (self createFFICalloutLiteralFromSpec: spec).
 	"iterate arguments in order (in the function) to create the function call"
-	spec arguments
-		withIndexDo: [ :each :index | 
-			each 
-				loader: (FFIMethodArgument new argName: 'arg', index asString);
-				emitArgument: builder context: nil ].
+	spec arguments withIndexDo: [ :each :index | 
+		each 
+			loader: (FFIMethodArgument new argName: 'arg', index asString);
+			emitArgument: builder context: nil ].
 	"create the array"
 	builder pushConsArray: numArgs.
 	"send call and store into result"
 	builder send: #invokeWithArguments:.
 	spec arguments
-		do: [ :each | each emitArgument: builder context: nil ].
+		do: [ :each | each emitReturnArgument: builder context: nil ].
 	"convert in case return type needs it. And return reseult"
 	^ spec returnType
 		emitReturn: builder
