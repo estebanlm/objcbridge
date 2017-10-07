@@ -23,15 +23,22 @@ ObjCObject >> descriptionString [
 
 { #category : #'reflective operations' }
 ObjCObject >> doesNotUnderstand: aMessage [
-	| objCMethod |
+	| objCMethod shadowMethod arguments |
 	
 	objCMethod := self objCMethodForSelector: aMessage selector.
 	objCMethod ifNil: [ ^ super doesNotUnderstand: aMessage ].
-	^ (ObjCSessionCache current
+	shadowMethod := ObjCSessionCache current
 		methodAt: objCMethod getHandle asInteger
-		ifAbsentPut: [ ObjCCalloutMethodBuilder buildMethod: objCMethod ])
+		ifAbsentPut: [ 
+			(ObjCCalloutMethodBuilder buildMethod: objCMethod)
+				selector: aMessage selector;
+				methodClass: self class;
+				yourself ].
+	arguments := ({ self. objCMethod method_getName }, (aMessage arguments)).
+	arguments crLog.
+	^ shadowMethod 
 		valueWithReceiver: self
-		arguments: ({ self. objCMethod method_getName }, (aMessage arguments))
+		arguments: arguments
 
 ]
 

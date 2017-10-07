@@ -13,7 +13,7 @@ ObjCLibrary class >> createObjCTypes [
 		Method 	ObjCMethod
 		Class 		ObjCClass
 		SEL 		ObjCSelector
-		id 			oop
+		id 			ObjCObject
 		IMP 		oop
 	)
 ]

@@ -18,7 +18,8 @@ ObjCCalloutMethodBuilder >> buildMethod: objCMethod [
 	| spec |
 	spec := ObjCSpecParser new parseMethod: objCMethod.
 	spec functionName: 'method_invoke'.
-	^ self generateMethodFromSpec: spec
+	^ self generateMethodFromSpec: spec.
+
 ]
 
 { #category : #'builder api' }
@@ -35,7 +36,6 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 	builder
 		numArgs: numArgs;
 		addTemps: #(result), ((1 to: numArgs) collect: [ :index | 'arg', index asString ]).
-		
 	
 	"save ffi call as literal"
 	builder pushLiteral: (self createFFICalloutLiteralFromSpec: spec).
@@ -50,7 +50,7 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 	"send call and store into result"
 	builder send: #invokeWithArguments:.
 	spec arguments
-		do: [ :each | each emitReturnArgument: builder context: nil ].
+		do: [ :each | each emitArgument: builder context: nil ].
 	"convert in case return type needs it. And return reseult"
 	^ spec returnType
 		emitReturn: builder

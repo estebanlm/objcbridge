@@ -37,18 +37,13 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 		at: $v "_C_VOID"		put: #void;
 		"at: $?" "_C_UNDEF"	"put: [];"
 		at: $^ "_C_PTR"			put: #oop;
-		at: $* "_CHARPTR"		put: #oop;
+		at: $* "_CHARPTR"		put: #String;
 		"at: $[" "_C_ARY_B"	"put: [];"
 		"at: $]" "_C_ARY_E"	"put: [];"
 		"at: $(" "_C_UNION_B"	"put: [];"
 		"at: $)" "_C_UNION_E"	"put: [];"
 		at: ${ "_C_STRUCT_B" 	put: #FFIExternalStructure.
 		"at: $}" "_C_STRUCT_E""put: []."
-
-#(
-	FourByteParameterTypes := '@#:cCsSiIlLf^*'.
-	EightByteParameterTypes := 'd'.
-).
 
 "#define _C_CONST			'r'
 #define _C_IN				'n'
@@ -60,48 +55,6 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 #define _C_GCINVISIBLE	'!'
 "
 	TypeQualifiers := 'nNoOrRV!'.
-#(				
-	MethodTypeResultMap := IdentityDictionary new: 32.
-	MethodTypeResultMap
-		at: $c "_CHR"			put: [:alien| alien unsignedByteAt: 1];
-		at: $C "_C_UCHR"		put: [:alien| alien unsignedByteAt: 1];
-		at: $s "_C_SHT"			put: [:alien| alien signedShortAt: 1];
-		at: $S "_C_USHT"		put: [:alien| alien unsignedShortAt: 1];
-		at: $i "_C_INT"			put: [:alien| alien signedLongAt: 1];
-		at: $I "_C_UINT"		put: [:alien| alien unsignedLongAt: 1];
-		at: $l "_C_LNG"			put: [:alien| alien signedLongAt: 1];
-		at: $L "_C_ULNG"		put: [:alien| alien unsignedLongAt: 1];
-		at: $f "_C_FLT"			put: [:alien| alien floatAt: 1];
-		at: $d "_C_DBL"		put: [:alien| alien doubleAt: 1].
-
-	MethodTypeCallbackResultMap := IdentityDictionary new: 32.
-	MethodTypeCallbackResultMap
-		at: $v 					put: [ :value | 0 ] ;
-		at: $c "_CHR"			put: [ :value | value asInteger] ;
-		at: $C "_C_UCHR"		put: [ :value | value asInteger ];
-		at: $s "_C_SHT"		put: [ :value | value asInteger ];
-		at: $S "_C_USHT"		put: [ :value | value asInteger ];
-		at: $i "_C_INT"			put: [ :value | value asInteger ];
-		at: $I "_C_UINT"		put: [ :value | value asInteger ];
-		at: $l "_C_LNG"			put: [ :value | value asInteger ];
-		at: $L "_C_ULNG"		put: [ :value | value asInteger ];
-		at: $f "_C_FLT"			put: [ :value | value asFloat ];
-		at: $d "_C_DBL"		put: [ :value | value asFloat ].
-
-	TypeSizes := IdentityDictionary new: 32.
-	TypeSizes
-		at: $c "_CHR"			put: 4;
-		at: $C "_C_UCHR"		put: 4;
-		at: $s "_C_SHT"		put: 4;
-		at: $S "_C_USHT"		put: 4;
-		at: $i "_C_INT"			put: 4;
-		at: $I "_C_UINT"		put: 4;
-		at: $l "_C_LNG"			put: 4;
-		at: $L "_C_ULNG"		put: 4;
-		at: $f "_C_FLT"			put: 4;
-		at: $d "_C_DBL"		put: 8;
-		at: $^					put: 4.
-)
 ]
 
 { #category : #parsing }

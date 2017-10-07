@@ -47,6 +47,12 @@ ObjCSessionCache >> methodAt: aSymbol ifAbsentPut: aBlock [
 ]
 
 { #category : #accessing }
+ObjCSessionCache >> reset [
+	methods := Dictionary new.
+	selectors := Dictionary new
+]
+
+{ #category : #accessing }
 ObjCSessionCache >> selectorAt: aSymbol ifAbsentPut: aBlock [
 	^ selectors 
 		at: aSymbol 
