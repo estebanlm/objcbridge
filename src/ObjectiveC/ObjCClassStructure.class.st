@@ -35,8 +35,8 @@ ObjCClassStructure class >> fieldsDesc [
 "
 
 	^ #(
-	void *isa;
-	void *super_class;
+	ObjCClass *isa;
+	ObjCClass *super_class;
 	String name;
 	long version;
 	long info;

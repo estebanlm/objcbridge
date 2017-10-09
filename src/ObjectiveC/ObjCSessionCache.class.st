@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'selectors',
-		'methods'
+		'methods',
+		'classes'
 	],
 	#classVars : [
 		'Current'
@@ -32,24 +33,73 @@ ObjCSessionCache class >> shutDown: quitting [
 	Current := nil
 ]
 
+{ #category : #accessing }
+ObjCSessionCache >> classAt: anAddress [
+	^ classes
+		at: anAddress asInteger
+		ifAbsent: [ NotFound signalFor: anAddress ]
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> classAt: anAddress ifAbsent: aBlock [
+	^ classes
+		at: anAddress asInteger
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> classAt: anAddress ifAbsentPut: aBlock [
+	^ classes
+		at: anAddress asInteger
+		ifAbsentPut: aBlock
+]
+
 { #category : #initialization }
 ObjCSessionCache >> initialize [
 	super initialize.
 	selectors := Dictionary new.
-	methods := Dictionary new
+	methods := Dictionary new.
+	classes := Dictionary new
 ]
 
 { #category : #accessing }
-ObjCSessionCache >> methodAt: aSymbol ifAbsentPut: aBlock [
+ObjCSessionCache >> methodAt: anAddress [
 	^ methods
-		at: aSymbol 
+		at: anAddress asInteger
+		ifAbsent: [ NotFound signalFor: anAddress ]
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> methodAt: anAddress ifAbsent: aBlock [
+	^ methods
+		at: anAddress asInteger
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> methodAt: anAddress ifAbsentPut: aBlock [
+	^ methods
+		at: anAddress asInteger
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 ObjCSessionCache >> reset [
-	methods := Dictionary new.
-	selectors := Dictionary new
+	self initialize
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> selectorAt: aSymbol [
+	^ selectors 
+		at: aSymbol 
+		ifAbsent: [ NotFound signalFor: aSymbol ]
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> selectorAt: aSymbol ifAbsent: aBlock [
+	^ selectors 
+		at: aSymbol 
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }

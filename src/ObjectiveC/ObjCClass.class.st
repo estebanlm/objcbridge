@@ -39,10 +39,7 @@ ObjCClass >> class_getClassMethod: aName [
 { #category : #private }
 ObjCClass >> innerStructure [
 	"The inner structure from this class"
-	^ ObjCClassStructure fromHandle: (ExternalData 
-			fromHandle: (self getHandle asExternalAddress pointerAt: 1) 
-			type: ExternalType void asPointerType)
-	
+	^ ObjCClassStructure fromHandle: self getHandle asExternalAddress
 ]
 
 { #category : #accessing }

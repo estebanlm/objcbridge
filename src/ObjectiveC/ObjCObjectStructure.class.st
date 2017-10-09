@@ -15,7 +15,7 @@ struct objc_object {
 };
 "
 	^ #(
-	ObjCClassStructure *isa
+	ObjCClass *isa
 	)
 
 ]
@@ -23,7 +23,7 @@ struct objc_object {
 { #category : #'accessing structure variables' }
 ObjCObjectStructure >> isa [
 	"This method was automatically generated"
-	^ObjCClassStructure fromHandle: (handle getHandle pointerAt: OFFSET_ISA)
+	^ExternalData fromHandle: (handle pointerAt: OFFSET_ISA) type: ExternalType void asPointerType
 ]
 
 { #category : #'accessing structure variables' }

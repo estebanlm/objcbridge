@@ -29,15 +29,16 @@ ObjCObject >> doesNotUnderstand: aMessage [
 	| objCMethod shadowMethod arguments |
 	
 	objCMethod := self objCMethodForSelector: aMessage selector.
-	objCMethod ifNil: [ ^ super doesNotUnderstand: aMessage ].
+	(objCMethod isNil or: [ objCMethod isNull ]) 
+		ifTrue: [ ^ super doesNotUnderstand: aMessage ].
 	shadowMethod := ObjCSessionCache current
-		methodAt: objCMethod getHandle asInteger
+		methodAt: objCMethod getHandle
 		ifAbsentPut: [ 
 			(ObjCCalloutMethodBuilder buildMethod: objCMethod)
 				selector: aMessage selector;
 				methodClass: self class;
 				yourself ].
-	arguments := ({ self. objCMethod method_getName }, (aMessage arguments)).
+	arguments := ({ self. objCMethod method_getName }, (aMessage arguments collect: #adaptToObjC)).
 	^ shadowMethod 
 		valueWithReceiver: self
 		arguments: arguments
@@ -47,21 +48,28 @@ ObjCObject >> doesNotUnderstand: aMessage [
 { #category : #private }
 ObjCObject >> innerStructure [
 	"The inner structure from this object"
-	^ ObjCObjectStructure fromHandle: (ExternalData 
-		fromHandle: (self getHandle asExternalAddress pointerAt: 1) 
-		type: ExternalType void asPointerType)
+	^ ObjCObjectStructure fromHandle: self getHandle asExternalAddress
 ]
 
 { #category : #accessing }
 ObjCObject >> isa [
-	^ isa ifNil: [ isa := self innerStructure isa ]
+	^ isa ifNil: [ | inner |
+		inner := self innerStructure.
+		isa := ObjCSessionCache current 
+			classAt: inner getHandle
+			ifAbsentPut: [ inner isa ] ]
 ]
 
 { #category : #private }
 ObjCObject >> objCMethodForSelector: aSelector [
 	^ self 
-		class: self isa 
+		class: self isa
 		getInstanceMethod: aSelector asObjCSelector
+]
+
+{ #category : #private }
+ObjCObject >> objCPerform: aSEL [
+	^ self ffiCall: #(id objc_msgSend(self, SEL aSEL))
 ]
 
 { #category : #'as yet unclassified' }
