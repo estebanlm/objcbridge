@@ -1,10 +1,13 @@
+"
+I point to libobjc and I provide mapping to it's types.
+"
 Class {
 	#name : #ObjCLibrary,
 	#superclass : #FFILibrary,
 	#classVars : [
 		'ObjCTypes'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #private }

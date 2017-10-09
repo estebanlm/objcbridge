@@ -1,3 +1,8 @@
+"
+I'm an Objective-C method structure.
+
+
+"
 Class {
 	#name : #ObjCMethodStructure,
 	#superclass : #ObjCStructure,
@@ -8,7 +13,7 @@ Class {
 		'OFFSET_METHOD_NAME',
 		'OFFSET_METHOD_TYPES'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Inner
 }
 
 { #category : #'field definition' }

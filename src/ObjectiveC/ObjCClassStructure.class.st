@@ -1,3 +1,8 @@
+"
+I'm a Objective-C class structure.
+
+https://opensource.apple.com/source/objc4/objc4-237/runtime/objc-class.h.auto.html
+"
 Class {
 	#name : #ObjCClassStructure,
 	#superclass : #ObjCStructure,
@@ -13,7 +18,7 @@ Class {
 		'OFFSET_SUPER_CLASS',
 		'OFFSET_VERSION'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Inner
 }
 
 { #category : #'field definition' }
@@ -35,8 +40,8 @@ ObjCClassStructure class >> fieldsDesc [
 "
 
 	^ #(
-	ObjCClass *isa;
-	ObjCClass *super_class;
+	ObjCClass isa;
+	ObjCClass super_class;
 	String name;
 	long version;
 	long info;
@@ -88,7 +93,7 @@ ObjCClassStructure >> instance_size: anObject [
 { #category : #'accessing structure variables' }
 ObjCClassStructure >> isa [
 	"This method was automatically generated"
-	^ExternalData fromHandle: (handle pointerAt: OFFSET_ISA) type: ExternalType void asPointerType
+	^ObjCClass fromHandle: (handle pointerAt: OFFSET_ISA)
 ]
 
 { #category : #'accessing structure variables' }
@@ -148,7 +153,7 @@ ObjCClassStructure >> protocols: anObject [
 { #category : #'accessing structure variables' }
 ObjCClassStructure >> super_class [
 	"This method was automatically generated"
-	^ExternalData fromHandle: (handle pointerAt: OFFSET_SUPER_CLASS) type: ExternalType void asPointerType
+	^ObjCClass fromHandle: (handle pointerAt: OFFSET_SUPER_CLASS)
 ]
 
 { #category : #'accessing structure variables' }

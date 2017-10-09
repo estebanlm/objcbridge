@@ -1,9 +1,12 @@
+"
+I represent an Objective-C method definition.
+"
 Class {
 	#name : #ObjCMethod,
 	#superclass : #FFIExternalObject,
 	#traits : 'TObjCLibrary',
 	#classTraits : 'TObjCLibrary classTrait',
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #accessing }

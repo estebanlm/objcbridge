@@ -1,7 +1,10 @@
+"
+I represent an Objective-C class
+"
 Class {
 	#name : #ObjCClass,
 	#superclass : #ObjCObject,
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #private }

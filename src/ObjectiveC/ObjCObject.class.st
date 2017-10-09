@@ -1,3 +1,6 @@
+"
+I represent an Objective-C instance.
+"
 Class {
 	#name : #ObjCObject,
 	#superclass : #FFIExternalObject,
@@ -6,7 +9,7 @@ Class {
 	#instVars : [
 		'isa'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #libraries }

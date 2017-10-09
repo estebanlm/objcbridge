@@ -1,3 +1,6 @@
+"
+I can parse an ObjCMethod (taking arguments and signature) to produce a FFIFunctionSpec instance (that will later be translated to an UFFI call)
+"
 Class {
 	#name : #ObjCSpecParser,
 	#superclass : #Object,
@@ -8,7 +11,7 @@ Class {
 		'MethodTypeMap',
 		'TypeQualifiers'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Builder
 }
 
 { #category : #'class initialization' }
@@ -31,6 +34,8 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 		at: $I "_C_UINT"		put: #uint;
 		at: $l "_C_LNG"			put: #long;
 		at: $L "_C_ULNG"		put: #ulong;
+		at: $q 					put: #longlong;
+		at: $Q 					put: #ulonglong;
 		at: $f "_C_FLT"			put: #float;
 		at: $d "_C_DBL"			put: #double;
 		"at: $b" "_C_BFLD"		"put: [];"

@@ -1,7 +1,10 @@
+"
+I'm a callout builder for Objective-C methods.
+"
 Class {
 	#name : #ObjCCalloutMethodBuilder,
 	#superclass : #FFICalloutMethodBuilder,
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Builder
 }
 
 { #category : #'builder api' }

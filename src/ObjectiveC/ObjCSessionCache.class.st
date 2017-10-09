@@ -1,3 +1,7 @@
+"
+I'm a cache of elements created in ObjC side.
+I keep selectors, classes, and shadow methods created.
+"
 Class {
 	#name : #ObjCSessionCache,
 	#superclass : #Object,
@@ -9,7 +13,7 @@ Class {
 	#classVars : [
 		'Current'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #accessing }

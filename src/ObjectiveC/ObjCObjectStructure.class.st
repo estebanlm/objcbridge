@@ -1,10 +1,13 @@
+"
+I'm an Objective-C object structure.
+"
 Class {
 	#name : #ObjCObjectStructure,
 	#superclass : #ObjCStructure,
 	#classVars : [
 		'OFFSET_ISA'
 	],
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Inner
 }
 
 { #category : #'fields description' }
@@ -15,7 +18,7 @@ struct objc_object {
 };
 "
 	^ #(
-	ObjCClass *isa
+	ObjCClass isa
 	)
 
 ]
@@ -23,7 +26,7 @@ struct objc_object {
 { #category : #'accessing structure variables' }
 ObjCObjectStructure >> isa [
 	"This method was automatically generated"
-	^ExternalData fromHandle: (handle pointerAt: OFFSET_ISA) type: ExternalType void asPointerType
+	^ObjCClass fromHandle: (handle pointerAt: OFFSET_ISA)
 ]
 
 { #category : #'accessing structure variables' }

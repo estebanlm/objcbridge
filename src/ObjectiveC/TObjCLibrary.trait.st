@@ -1,6 +1,9 @@
+"
+I define a class as part of the ObjC infrastructure.
+"
 Trait {
 	#name : #TObjCLibrary,
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #accessing }

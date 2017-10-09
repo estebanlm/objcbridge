@@ -1,9 +1,12 @@
+"
+I represent an Objective-C selector.
+"
 Class {
 	#name : #ObjCSelector,
 	#superclass : #FFIExternalObject,
 	#traits : 'TObjCLibrary',
 	#classTraits : 'TObjCLibrary classTrait',
-	#category : #ObjectiveC
+	#category : #ObjectiveC-Core
 }
 
 { #category : #registry }
