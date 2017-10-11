@@ -62,37 +62,59 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 	TypeQualifiers := 'nNoOrRV!'.
 ]
 
-{ #category : #parsing }
+{ #category : #'private parsing' }
+ObjCSpecParser >> nextType: aStream [
+	| ch |
+	[ TypeQualifiers includes: (ch := aStream next) ] whileTrue. 
+	^ FFICallout new 
+		requestor: ObjCLibrary;
+		resolveType: (MethodTypeMap at: ch)
+]
+
+{ #category : #'private parsing' }
 ObjCSpecParser >> parseArguments [
-	| arguments |
+	"| arguments |
 	
 	arguments := Array new writeStream.
 	[ stream atEnd ] whileFalse: [ 
 		arguments nextPut: self parseType ].
-	^ arguments contents
+	^ arguments contents"
 
 ]
 
 { #category : #parsing }
-ObjCSpecParser >> parseMethod: aMethod [
+ObjCSpecParser >> parseMethod: anObjCMethod [
 	^ FFIFunctionSpec new
-		returnType: (self parseType: aMethod returnType);
-		arguments: (aMethod argumentTypes collect: [ :each | each ifNotNil: [ self parseType: each ] ]);
+		returnType: (self parseType: anObjCMethod returnType);
+		arguments: (anObjCMethod argumentTypes 
+			collect: [ :each | each ifNotNil: [ self parseType: each ] ]);
 		yourself.
 	
 ]
 
-{ #category : #parsing }
+{ #category : #'private parsing' }
 ObjCSpecParser >> parseReturn [
 	^ self parseType
 ]
 
 { #category : #parsing }
+ObjCSpecParser >> parseSignature: aString [
+	"methods signature is always: return type, object, selector, ..."
+	| signatureStream arguments |
+	
+	arguments := OrderedCollection new.
+	signatureStream := aString readStream.
+	[ signatureStream atEnd ] 
+	whileFalse: [ arguments add: (self nextType: signatureStream) ].
+	
+	^ FFIFunctionSpec new
+		returnType: arguments first;
+		arguments: (arguments allButFirst: 3) asArray;
+		yourself.
+	
+]
+
+{ #category : #'private parsing' }
 ObjCSpecParser >> parseType: aString [
-	| ch typeStream |
-	typeStream := aString readStream.
-	[ TypeQualifiers includes: (ch := typeStream next) ] whileTrue. 
-	^ FFICallout new 
-		requestor: ObjCLibrary;
-		resolveType: (MethodTypeMap at: ch)
+	^ self nextType: aString readStream
 ]

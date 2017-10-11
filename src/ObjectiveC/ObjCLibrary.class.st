@@ -17,7 +17,8 @@ ObjCLibrary class >> createObjCTypes [
 		Class 		ObjCClass
 		SEL 		ObjCSelector
 		id 			ObjCObject
-		IMP 		oop
+		IMP 		ObjCCallback
+		BOOL 		bool
 	)
 ]
 
