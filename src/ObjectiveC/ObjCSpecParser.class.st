@@ -109,7 +109,7 @@ ObjCSpecParser >> parseSignature: aString [
 	
 	^ FFIFunctionSpec new
 		returnType: arguments first;
-		arguments: (arguments allButFirst: 3) asArray;
+		arguments: arguments allButFirst asArray;
 		yourself.
 	
 ]

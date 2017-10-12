@@ -54,3 +54,8 @@ ObjCClass >> name [
 ObjCClass >> objCMethodForSelector: aSelector [
 	^ self class_getClassMethod: aSelector asObjCSelector
 ]
+
+{ #category : #printing }
+ObjCClass >> printOn: aStream [ 
+	aStream << 'ObjC:' << self name
+]

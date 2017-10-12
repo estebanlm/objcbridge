@@ -1,22 +1,29 @@
 Class {
 	#name : #ObjCProxyObject,
-	#superclass : #FFIExternalObject,
-	#traits : 'TObjCLibrary',
-	#classTraits : 'TObjCLibrary classTrait',
+	#superclass : #Object,
 	#instVars : [
+		'proxy',
 		'receiver'
 	],
 	#category : #ObjectiveC-Proxy
 }
 
 { #category : #'instance creation' }
-ObjCProxyObject class >> fromHandle: aHandle receiver: anObject [ 
-	^ (self fromHandle: aHandle) receiver: anObject
+ObjCProxyObject class >> proxy: aProxy receiver: anObject [ 
+	^ self new 
+		proxy: aProxy; 
+		receiver: anObject;
+		yourself
 ]
 
-{ #category : #'instance creation' }
-ObjCProxyObject class >> new [ 
-	self error: 'Use #fromHandle:receiver:'
+{ #category : #accessing }
+ObjCProxyObject >> proxy [
+	^ proxy
+]
+
+{ #category : #private }
+ObjCProxyObject >> proxy: anObject [
+	proxy := anObject.
 ]
 
 { #category : #accessing }

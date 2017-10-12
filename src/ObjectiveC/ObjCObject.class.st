@@ -51,16 +51,22 @@ ObjCObject >> doesNotUnderstand: aMessage [
 { #category : #private }
 ObjCObject >> innerStructure [
 	"The inner structure from this object"
-	^ ObjCObjectStructure fromHandle: self getHandle asExternalAddress
+	^ ObjCObjectStructure fromHandle: (self getHandle asExternalAddress pointerAt: 1) asExternalAddress
 ]
 
 { #category : #accessing }
 ObjCObject >> isa [
-	^ isa ifNil: [ | inner |
+	^ isa ifNil: [
+		| h |
+		h := (self objCPerform: #class asObjCSelector) getHandle.
+		isa := ObjCSessionCache current 
+			classAt: h
+			ifAbsentPut: [ ObjCClass fromHandle: h ] ]
+	"^ isa ifNil: [ | inner |
 		inner := self innerStructure.
 		isa := ObjCSessionCache current 
 			classAt: inner getHandle
-			ifAbsentPut: [ inner isa ] ]
+			ifAbsentPut: [ inner isa ] ]"
 ]
 
 { #category : #private }

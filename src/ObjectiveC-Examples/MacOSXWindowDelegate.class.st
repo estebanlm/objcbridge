@@ -22,23 +22,23 @@ MacOSXWindowDelegate class >> example [
 
 	pool := ('NSAutoreleasePool' inObjCFramework: 'Foundation') alloc init.
 
-	window := ('NSWindow' inObjCFramework: 'AppKit') alloc
-			initWithContentRect: (NSRect x: 0 y: 0 width: 600 height: 400)
+	window := ('NSWindow' inObjCFramework: 'AppKit') alloc 
+			initWithContentRect: (NSRect x: 100.0 y: 100.0 width: 600.0 height: 400.0)
 			styleMask: NSTitledWindowMask 
 				| NSClosableWindowMask 
 				| NSMiniaturizableWindowMask
 				| NSResizableWindowMask 
 				| NSTexturedBackgroundWindowMask
 			backing: NSBackingStoreBuffered
-			defer: 0.
+			defer: 0 asCharacter.
 	window setTitle: 'Table!' asNSString.
+	window autorelease.
 	
-	delegate := self new. 
-	window setDelegate: (delegate := (ObjCProxyClass newFor: self new)).
-	delegate inspect. "Just to prevent GC"
-	
+	delegate := ObjCProxyClass newFor: self new.
+	window setDelegate: delegate proxy.
+	{window. delegate} inspect. "Just to prevent GC"
 	window center.
-	window makeKeyAndOrderFront: nil.
+	window makeKeyAndOrderFront: ObjCObject null.
 	pool release.
 ]
 

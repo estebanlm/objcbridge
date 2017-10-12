@@ -53,7 +53,7 @@ ObjCProxyClass >> addMethod: aSelector signature: aString in: theClass [
 	callback := self createCallbackFor: aSelector signature: aString.
 	callbacks add: callback.
 	self 
-		class_addMethodClass: self proxyClass
+		class_addMethodClass: theClass
 		selector: aSelector asObjCSelector 
 		implementation: callback
 		signature: aString
@@ -77,7 +77,7 @@ ObjCProxyClass >> createCallbackFor: aSelector signature: aString [
 	^ ObjCProxyCallback 
 		signature: aString
 		block: [ :receiver :selector :args | 
-			(self findInstance: receiver address) receiver
+			(self findInstance: receiver asInteger) receiver
 				perform: aSelector 
 				withArguments: args ]
 ]
@@ -107,15 +107,15 @@ ObjCProxyClass >> createClassNamed: className superclass: superclassName  into: 
 
 { #category : #private }
 ObjCProxyClass >> findInstance: addressNumber [
-	^ instances detect: [ :each | each getHandle asInteger = addressNumber ].
+	^ instances detect: [ :each | each proxy getHandle asInteger = addressNumber ].
 ]
 
 { #category : #initialization }
 ObjCProxyClass >> initialize [
 	super initialize.
-	self installProxyClass.
 	instances := WeakSet new.
 	callbacks := Set new.
+	self installProxyClass.
 	proxyClass := self proxyClassName inObjC.
 ]
 
@@ -131,7 +131,7 @@ ObjCProxyClass >> installProxyClass [
 	 ProxyCallbacks  is a class side attribute to keep the callbacks and prevent them from being 
 	 garbage collected"
 	
-	self
+	 self
 		createClassNamed: self proxyClassName
 		superclass: 'NSObject' 
 		into: [ :theClass :theSuperclass | 
@@ -150,9 +150,9 @@ ObjCProxyClass >> new [
 { #category : #'instance creation' }
 ObjCProxyClass >> newFor: anObject [ 
 	| newInstance |
-	
+
 	newInstance := (ObjCProxyObject 
-		setHandle: proxyClass alloc init; 
+		proxy: proxyClass alloc init 
 		receiver: anObject).
 	instances add: newInstance.
 	
@@ -184,7 +184,7 @@ ObjCProxyClass >> proxyClass [
 
 { #category : #accessing }
 ObjCProxyClass >> proxyClassName [
-	^ ('SmalltalkProxyFor', self receiverClass name) asSymbol
+	^ 'PharoProxyFor', self receiverClass name
 ]
 
 { #category : #accessing }

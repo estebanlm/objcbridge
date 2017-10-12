@@ -27,7 +27,7 @@ NSRect class >> fieldsDesc [
 
 { #category : #'instance creation' }
 NSRect class >> x: x y: y width: w height: h [
-	^ self new 
+	^ self externalNew autoRelease
 		x: x;
 		y: y;
 		width: w;
