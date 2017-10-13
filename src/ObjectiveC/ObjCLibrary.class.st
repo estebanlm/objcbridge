@@ -19,6 +19,9 @@ ObjCLibrary class >> createObjCTypes [
 		id 			ObjCObject
 		IMP 		ObjCProxyCallback
 		BOOL 		bool
+		CGRect 	NSRect
+		CGPoint 	NSPoint
+		CGSize 	NSPoint
 	)
 ]
 

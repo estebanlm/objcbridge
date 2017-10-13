@@ -4,6 +4,8 @@ I can parse an ObjCMethod (taking arguments and signature) to produce a FFIFunct
 Class {
 	#name : #ObjCSpecParser,
 	#superclass : #Object,
+	#traits : 'TObjCLibrary',
+	#classTraits : 'TObjCLibrary classTrait',
 	#instVars : [
 		'stream'
 	],
@@ -63,23 +65,25 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 ]
 
 { #category : #'private parsing' }
-ObjCSpecParser >> nextType: aStream [
-	| ch |
-	[ TypeQualifiers includes: (ch := aStream next) ] whileTrue. 
-	^ FFICallout new 
-		requestor: ObjCLibrary;
-		resolveType: (MethodTypeMap at: ch)
+ObjCSpecParser >> isStructure: ch [
+	^ ch = ${
 ]
 
 { #category : #'private parsing' }
-ObjCSpecParser >> parseArguments [
-	"| arguments |
-	
-	arguments := Array new writeStream.
-	[ stream atEnd ] whileFalse: [ 
-		arguments nextPut: self parseType ].
-	^ arguments contents"
+ObjCSpecParser >> nextStructure: aStream [
+	^ FFICallout new 
+		requestor: self;
+		resolveType: (aStream upTo: $=)
+]
 
+{ #category : #'private parsing' }
+ObjCSpecParser >> nextType: aStream [
+	| ch |
+	[ TypeQualifiers includes: (ch := aStream next) ] whileTrue.
+ 	(self isStructure: ch) ifTrue: [ ^ self nextStructure: aStream ].
+	^ FFICallout new 
+		requestor: ObjCLibrary;
+		resolveType: (MethodTypeMap at: ch)
 ]
 
 { #category : #parsing }
@@ -90,11 +94,6 @@ ObjCSpecParser >> parseMethod: anObjCMethod [
 			collect: [ :each | each ifNotNil: [ self parseType: each ] ]);
 		yourself.
 	
-]
-
-{ #category : #'private parsing' }
-ObjCSpecParser >> parseReturn [
-	^ self parseType
 ]
 
 { #category : #parsing }

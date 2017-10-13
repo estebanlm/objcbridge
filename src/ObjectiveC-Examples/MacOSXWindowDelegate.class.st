@@ -32,6 +32,7 @@ MacOSXWindowDelegate class >> example [
 			backing: NSBackingStoreBuffered
 			defer: 0 asCharacter.
 	window setTitle: 'Table!' asNSString.
+	window setMinSize: (NSPoint width: 500 height: 500).
 	window autorelease.
 	
 	delegate := ObjCProxyClass newFor: self new.

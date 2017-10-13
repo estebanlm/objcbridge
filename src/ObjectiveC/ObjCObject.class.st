@@ -36,7 +36,7 @@ ObjCObject >> doesNotUnderstand: aMessage [
 		ifTrue: [ ^ super doesNotUnderstand: aMessage ].
 	shadowMethod := ObjCSessionCache current
 		methodAt: objCMethod getHandle
-		ifAbsentPut: [ 
+		ifAbsentPut: [
 			(ObjCCalloutMethodBuilder buildMethod: objCMethod)
 				selector: aMessage selector;
 				methodClass: self class;
@@ -57,11 +57,11 @@ ObjCObject >> innerStructure [
 { #category : #accessing }
 ObjCObject >> isa [
 	^ isa ifNil: [
-		| h |
-		h := (self objCPerform: #class asObjCSelector) getHandle.
+		| classHandle |
+		classHandle := (self objCPerform: #class asObjCSelector) getHandle.
 		isa := ObjCSessionCache current 
-			classAt: h
-			ifAbsentPut: [ ObjCClass fromHandle: h ] ]
+			classAt: classHandle
+			ifAbsentPut: [ ObjCClass fromHandle: classHandle ] ]
 	"^ isa ifNil: [ | inner |
 		inner := self innerStructure.
 		isa := ObjCSessionCache current 

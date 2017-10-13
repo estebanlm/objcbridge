@@ -16,25 +16,53 @@ ObjCCalloutMethodBuilder class >> buildMethod: objCMethod [
 		buildMethod: objCMethod
 ]
 
+{ #category : #private }
+ObjCCalloutMethodBuilder >> adaptSpecToReturnType: aSpec [
+	aSpec functionName: (self msgSendFunctionForReturnType: aSpec returnType)
+]
+
 { #category : #'builder api' }
 ObjCCalloutMethodBuilder >> buildMethod: objCMethod [
 	| spec |
 	spec := ObjCSpecParser new parseMethod: objCMethod.
-	spec functionName: 'objc_msgSend'.
-	^ self generateMethodFromSpec: spec.
-
+	self adaptSpecToReturnType: spec.
+	^ self generateMethodFromSpec: spec
 ]
 
-{ #category : #'builder api' }
+{ #category : #accessing }
 ObjCCalloutMethodBuilder >> callType [
 	^ 0 "cdecl"
 ]
 
-{ #category : #'builder api' }
+{ #category : #'private factory' }
+ObjCCalloutMethodBuilder >> createFFICalloutLiteralFromSpec: spec [
+	| externalFunction return arguments |
+	
+	return := spec returnType externalTypeWithArity.
+	arguments := spec arguments collect: #externalTypeWithArity.
+	spec returnType isTypeStructure ifTrue: [ 
+		arguments := arguments copyWithFirst: spec returnType externalType asPointerType.
+		return := FFIVoid externalType ].
+	
+	externalFunction := ExternalLibraryFunction
+		name: spec functionName
+		module: self moduleName
+		callType: self callType
+		returnType: return
+		argumentTypes: arguments.
+	
+	functionResolutionStrategies
+		detect: [ :each | each isApplicableFor: self requestor ]
+		ifFound: [ :each | each resolve: externalFunction ].
+		
+	^ externalFunction
+]
+
+{ #category : #private }
 ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 	| numArgs |
 
-	numArgs := spec arguments size.	
+	numArgs := spec arguments size.
 	"Builds a method call"
 	builder
 		numArgs: numArgs;
@@ -43,16 +71,34 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 	"save ffi call as literal"
 	builder pushLiteral: (self createFFICalloutLiteralFromSpec: spec).
 	"iterate arguments in order (in the function) to create the function call"
+	"if we have a structure, create and push it"
+	spec returnType isTypeStructure 
+		ifTrue: [ 
+			builder 
+				pushLiteralVariable: spec returnType objectClass binding;
+				"send: #externalNew;
+				send: #autoRelease;"
+				send: #new;
+				storeTemp: #result ].
 	spec arguments withIndexDo: [ :each :index | 
 		each 
 			loader: (FFIMethodArgument new argName: 'arg', index asString);
 			emitArgument: builder context: nil ].
 	"create the array"
-	builder pushConsArray: numArgs.
+	builder pushConsArray: (spec returnType isTypeStructure 
+		ifTrue: [ numArgs + 1 ]
+		ifFalse: [ numArgs ]).
 	"send call and store into result"
 	builder send: #invokeWithArguments:.
 	spec arguments
 		do: [ :each | each emitReturnArgument: builder context: nil ].
+
+	"Return result if this is a struct (it was passed as parameter)"
+	spec returnType isTypeStructure ifTrue: [ 
+		^ builder 
+			pushTemp: #result;
+			returnTop ].
+
 	"convert in case return type needs it. And return reseult"
 	^ spec returnType
 		emitReturn: builder
@@ -60,7 +106,7 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 		context: sender
 ]
 
-{ #category : #'builder api' }
+{ #category : #private }
 ObjCCalloutMethodBuilder >> generateMethodFromSpec: spec [
 	| ir |
 	ir := IRBuilder buildIR: [ :builder | 
@@ -68,7 +114,14 @@ ObjCCalloutMethodBuilder >> generateMethodFromSpec: spec [
 	^ ir generate
 ]
 
-{ #category : #'builder api' }
+{ #category : #accessing }
 ObjCCalloutMethodBuilder >> moduleName [
 	^ ObjCLibrary uniqueInstance moduleName
+]
+
+{ #category : #private }
+ObjCCalloutMethodBuilder >> msgSendFunctionForReturnType: aType [
+	aType isTypeStructure ifTrue: [ ^ 'objc_msgSend_stret' ].
+	aType isTypeFloat ifTrue: [ ^ 'objc_msgSend_fpret' ].
+	^ 'objc_msgSend'
 ]

@@ -17,8 +17,16 @@ NSPoint class >> fieldsDesc [
 ]
 
 { #category : #'instance creation' }
+NSPoint class >> width: x height: y [ 
+	^ self new
+		x: x;
+		y: y;
+		yourself. 
+]
+
+{ #category : #'instance creation' }
 NSPoint class >> x: x y: y [ 
-	^ self externalNew autoRelease
+	^ super new
 		x: x;
 		y: y;
 		yourself. 
