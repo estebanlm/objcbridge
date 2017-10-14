@@ -1,6 +1,6 @@
 Class {
 	#name : #NSRect,
-	#superclass : #FFIExternalStructure,
+	#superclass : #FFIExternalPackedStructure,
 	#classVars : [
 		'OFFSET_HEIGHT',
 		'OFFSET_WIDTH',

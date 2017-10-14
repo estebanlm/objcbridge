@@ -4,3 +4,8 @@ Extension { #name : #FFIExternalStructureType }
 FFIExternalStructureType >> isTypeStructure [
 	^ true
 ]
+
+{ #category : #'*ObjectiveC' }
+FFIExternalStructureType >> objCSignatureType [
+	^ '{', self objectClass name, '}'
+]

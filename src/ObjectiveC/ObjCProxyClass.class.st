@@ -47,16 +47,16 @@ ObjCProxyClass class >> startUp: resuming [
 ]
 
 { #category : #private }
-ObjCProxyClass >> addMethod: aSelector signature: aString in: theClass [
+ObjCProxyClass >> addMethod: aSelector signature: aStringOrArray in: theClass [
 	| callback |
 	
-	callback := self createCallbackFor: aSelector signature: aString.
+	callback := self createCallbackFor: aSelector signature: aStringOrArray.
 	callbacks add: callback.
 	self 
 		class_addMethodClass: theClass
 		selector: aSelector asObjCSelector 
 		implementation: callback
-		signature: aString
+		signature: (self newParser signatureToObjC: aStringOrArray)
 ]
 
 { #category : #private }
@@ -157,6 +157,11 @@ ObjCProxyClass >> newFor: anObject [
 	instances add: newInstance.
 	
 	^ newInstance
+]
+
+{ #category : #private }
+ObjCProxyClass >> newParser [
+	^ ObjCSpecParser new
 ]
 
 { #category : #private }

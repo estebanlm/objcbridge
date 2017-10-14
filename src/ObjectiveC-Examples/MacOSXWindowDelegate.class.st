@@ -45,7 +45,7 @@ MacOSXWindowDelegate class >> example [
 
 { #category : #'event handling' }
 MacOSXWindowDelegate >> windowDidMove: notification [
-	<objCSignature: 'v@:@'>
+	<objCSignature: #(void (id notification))>
 	
 	Transcript show: 'OK!!!!'; cr.
 ]

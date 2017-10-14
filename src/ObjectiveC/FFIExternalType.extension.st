@@ -9,3 +9,8 @@ FFIExternalType >> isTypeFloat [
 FFIExternalType >> isTypeStructure [
 	^ false
 ]
+
+{ #category : #'*ObjectiveC' }
+FFIExternalType >> objCSignatureType [
+	^ ObjCSpecParser reverseType: self class
+]
