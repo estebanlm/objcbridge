@@ -53,7 +53,7 @@ ObjCObject >> innerStructure [
 
 { #category : #private }
 ObjCObject >> installMethodAt: aSelector implementation: aMethod [
-	self isa
+	^ self isa
 		methodAt: aSelector
 		put: aMethod
 ]
@@ -75,9 +75,9 @@ ObjCObject >> installedMethodForMessage: aMessage [
 	objCMethod := self objCMethodForSelector: aMessage selector.
 	(objCMethod isNil or: [ objCMethod isNull ]) 
 		ifTrue: [ ^ nil ].
-	^ self isa 
-		methodAt: aMessage selector
-		put: ((ObjCCalloutMethodBuilder buildMethod: objCMethod)
+	^ self 
+		installMethodAt: aMessage selector
+		implementation: ((ObjCCalloutMethodBuilder buildMethod: objCMethod)
 				selector: ((aMessage numArgs = 0
 					ifTrue: [ aMessage selector, #_rec:_sel: ]
 					ifFalse: [ #_rec:_sel:, aMessage selector ])

@@ -117,7 +117,7 @@ MacOSXAlertDelegate class >> exampleWithFunction [
 self halt.
 	alert 
 		beginSheetModalForWindow: win
-		completionHandler: (function := ObjCFunction 
+		completionHandler: (function := FFICallback 
 			signature: #(void (int result)) 
 			block: [ :args |
 				Transcript crShow: 'OK!'.

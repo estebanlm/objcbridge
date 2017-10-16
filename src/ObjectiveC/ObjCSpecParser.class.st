@@ -50,8 +50,10 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 		"at: $]" "_C_ARY_E"	"put: [];"
 		"at: $(" "_C_UNION_B"	"put: [];"
 		"at: $)" "_C_UNION_E"	"put: [];"
-		at: ${ "_C_STRUCT_B" 	put: #FFIExternalStructure.
+		at: ${ "_C_STRUCT_B" 	put: #FFIExternalStructure;
 		"at: $}" "_C_STRUCT_E""put: []."
+		"NB: this is an aggregated of mine, to handle annonymous functions"
+		at: $? 					put: #FFICallback.
 
 	ReversedMethodTypeMap := Dictionary new: 32.
 	ReversedMethodTypeMap
@@ -102,6 +104,11 @@ ObjCSpecParser >> ffiInstVarArgument: argName generator: generator [
 ]
 
 { #category : #'private testing' }
+ObjCSpecParser >> isObject: ch [
+	^ ch = $@
+]
+
+{ #category : #'private testing' }
 ObjCSpecParser >> isStructure: ch [
 	^ ch = ${
 ]
@@ -127,6 +134,9 @@ ObjCSpecParser >> nextType: aStream [
 	| ch |
 	[ TypeQualifiers includes: (ch := aStream next) ] whileTrue.
  	(self isStructure: ch) ifTrue: [ ^ self nextStructure: aStream ].
+	((self isObject: ch) and: [ aStream peek = $? ]) ifTrue: [ 
+		aStream skip: 1.
+		ch := $? ].
 	^ FFICallout new 
 		requestor: ObjCLibrary;
 		resolveType: (MethodTypeMap at: ch)

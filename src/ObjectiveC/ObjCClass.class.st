@@ -90,7 +90,7 @@ ObjCClass >> innerStructure [
 
 { #category : #private }
 ObjCClass >> installMethodAt: aSelector implementation: aMethod [
-	self 
+	^ self 
 		classMethodAt: aSelector
 		put: aMethod
 ]
