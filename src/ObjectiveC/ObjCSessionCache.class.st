@@ -7,8 +7,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'selectors',
-		'methods',
-		'classes'
+		'classesByName',
+		'classesByAddress'
 	],
 	#classVars : [
 		'Current'
@@ -39,52 +39,58 @@ ObjCSessionCache class >> shutDown: quitting [
 
 { #category : #accessing }
 ObjCSessionCache >> classAt: anAddress [
-	^ classes
+	^ classesByAddress
 		at: anAddress asInteger
 		ifAbsent: [ NotFound signalFor: anAddress ]
 ]
 
 { #category : #accessing }
 ObjCSessionCache >> classAt: anAddress ifAbsent: aBlock [
-	^ classes
+	^ classesByAddress
 		at: anAddress asInteger
 		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 ObjCSessionCache >> classAt: anAddress ifAbsentPut: aBlock [
-	^ classes
+	^ classesByAddress
 		at: anAddress asInteger
-		ifAbsentPut: aBlock
+		ifAbsentPut: [ | theClass |
+			theClass := aBlock value.
+			classesByName at: theClass name asSymbol put: theClass.
+			theClass ]
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> classNamed: aName [
+	^ classesByName
+		at: aName asSymbol
+		 ifAbsent: [ NotFound signalFor: aName ]
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> classNamed: aName ifAbsent: aBlock [
+	^ classesByName
+		at: aName asSymbol
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> classNamed: aName ifAbsentPut: aBlock [
+	^ classesByName
+		at: aName asSymbol
+		ifAbsentPut: [ | theClass |
+			theClass := aBlock value.
+			classesByAddress at: theClass getHandle asInteger put: theClass.
+			theClass ]
 ]
 
 { #category : #initialization }
 ObjCSessionCache >> initialize [
 	super initialize.
 	selectors := Dictionary new.
-	methods := Dictionary new.
-	classes := Dictionary new
-]
-
-{ #category : #accessing }
-ObjCSessionCache >> methodAt: anAddress [
-	^ methods
-		at: anAddress asInteger
-		ifAbsent: [ NotFound signalFor: anAddress ]
-]
-
-{ #category : #accessing }
-ObjCSessionCache >> methodAt: anAddress ifAbsent: aBlock [
-	^ methods
-		at: anAddress asInteger
-		ifAbsent: aBlock
-]
-
-{ #category : #accessing }
-ObjCSessionCache >> methodAt: anAddress ifAbsentPut: aBlock [
-	^ methods
-		at: anAddress asInteger
-		ifAbsentPut: aBlock
+	classesByName := Dictionary new.	
+	classesByAddress := Dictionary new
 ]
 
 { #category : #initialization }

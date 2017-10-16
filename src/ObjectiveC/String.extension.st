@@ -13,13 +13,6 @@ String >> adaptToObjC [
 ]
 
 { #category : #'*ObjectiveC' }
-String >> asNSString [
-	^ self 
-		ifNotEmpty: [ #NSString inObjC alloc initWithUTF8String: self ]
-		ifEmpty: [ #NSString inObjC string ]
-]
-
-{ #category : #'*ObjectiveC' }
 String >> inObjC [
 	^ ObjCClass lookup: self asString
 ]
