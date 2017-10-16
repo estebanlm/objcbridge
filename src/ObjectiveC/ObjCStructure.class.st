@@ -11,3 +11,16 @@ Class {
 	#classTraits : 'TObjCLibrary classTrait',
 	#category : #ObjectiveC-Inner
 }
+
+{ #category : #accessing }
+ObjCStructure class >> ffiStructureAliasOf: aName [
+	^ self structureAliases 
+		detect: [ :each | each = aName ]
+		ifFound: [ :each | each -> self ]
+		ifNone: [ nil ]
+]
+
+{ #category : #'field definition' }
+ObjCStructure class >> structureAliases [
+	^ #()
+]

@@ -19,17 +19,24 @@ ObjCLibrary class >> createObjCTypes [
 		id 			ObjCObject
 		IMP 		ObjCProxyCallback
 		BOOL 		bool
-		CGRect 	NSRect
-		CGPoint 	NSPoint
-		CGSize 	NSPoint
 	)
+]
+
+{ #category : #private }
+ObjCLibrary class >> ffiBindingMaybeObjCStruct: aName [
+	ObjCStructure allSubclasses do: [ :each |
+		(each ffiStructureAliasOf: aName)
+			ifNotNil: [ :binding | ^ binding ] ].
+ 	^ nil
 ]
 
 { #category : #private }
 ObjCLibrary class >> ffiBindingOf: aName [
 	^ ObjCTypes 
 		at: aName
-		ifAbsent: [ super ffiBindingOf: aName ]
+		ifAbsent: [ 
+			(self ffiBindingMaybeObjCStruct: aName)
+				ifNil: [ super ffiBindingOf: aName ] ]
 ]
 
 { #category : #'class initialization' }

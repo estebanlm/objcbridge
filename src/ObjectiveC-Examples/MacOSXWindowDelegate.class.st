@@ -20,10 +20,10 @@ MacOSXWindowDelegate class >> example [
 	NSTexturedBackgroundWindowMask := 1 << 8.
 	NSBackingStoreBuffered := 2.
 
-	pool := ('NSAutoreleasePool' inObjCFramework: 'Foundation') alloc init.
+	pool := 'NSAutoreleasePool' inObjC alloc init.
 
-	window := ('NSWindow' inObjCFramework: 'AppKit') alloc 
-			initWithContentRect: (NSRect x: 100.0 y: 100.0 width: 600.0 height: 400.0)
+	window := 'NSWindow' inObjC alloc 
+			initWithContentRect: (NSRect x: 0.0 y: 0.0 width: 600.0 height: 400.0)
 			styleMask: NSTitledWindowMask 
 				| NSClosableWindowMask 
 				| NSMiniaturizableWindowMask
@@ -32,7 +32,6 @@ MacOSXWindowDelegate class >> example [
 			backing: NSBackingStoreBuffered
 			defer: 0 asCharacter.
 	window setTitle: 'Table!' asNSString.
-	window setMinSize: (NSPoint width: 500 height: 500).
 	window autorelease.
 	
 	delegate := ObjCProxyClass newFor: self new.
@@ -40,7 +39,7 @@ MacOSXWindowDelegate class >> example [
 	{window. delegate} inspect. "Just to prevent GC"
 	window center.
 	window makeKeyAndOrderFront: ObjCObject null.
-	pool release.
+	pool release
 ]
 
 { #category : #'event handling' }

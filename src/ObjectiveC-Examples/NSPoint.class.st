@@ -1,6 +1,6 @@
 Class {
 	#name : #NSPoint,
-	#superclass : #FFIExternalStructure,
+	#superclass : #ObjCStructure,
 	#classVars : [
 		'OFFSET_X',
 		'OFFSET_Y'
@@ -14,6 +14,11 @@ NSPoint class >> fieldsDesc [
    double x;
 	double y;
 	)
+]
+
+{ #category : #'field definition' }
+NSPoint class >> structureAliases [
+	^ #(CGPoint NSSize CGSize)
 ]
 
 { #category : #'instance creation' }

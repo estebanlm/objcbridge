@@ -24,7 +24,7 @@ MacOSXAlertDelegate >> example [
 	pool := (#NSAutoreleasePool inObjCFramework: 'Foundation') alloc init.
 
 	win := (#NSWindow inObjCFramework: 'AppKit') alloc
-		initWithContentRect: (NSRect x: 250.0 y: 150.0 width: 300.0 height: 200.0)
+		initWithContentRect: (NSRect x: 250.0 y: 150.0 width: 600.0 height: 600.0)
 		styleMask: 
 			NSTitledWindowMask 
 			| NSClosableWindowMask 

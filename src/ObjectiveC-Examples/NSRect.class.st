@@ -1,6 +1,6 @@
 Class {
 	#name : #NSRect,
-	#superclass : #FFIExternalPackedStructure,
+	#superclass : #ObjCStructure,
 	#classVars : [
 		'OFFSET_HEIGHT',
 		'OFFSET_WIDTH',
@@ -25,6 +25,11 @@ NSRect class >> fieldsDesc [
 	)
 ]
 
+{ #category : #'field definition' }
+NSRect class >> structureAliases [
+	^ #(CGRect)
+]
+
 { #category : #'instance creation' }
 NSRect class >> x: x y: y width: w height: h [
 	^ self new
@@ -44,7 +49,7 @@ NSRect >> height [
 { #category : #'accessing structure variables' }
 NSRect >> height: anObject [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_HEIGHT put: anObject
+	handle doubleAt: OFFSET_HEIGHT put: anObject asFloat
 ]
 
 { #category : #'accessing structure variables' }
@@ -56,7 +61,7 @@ NSRect >> width [
 { #category : #'accessing structure variables' }
 NSRect >> width: anObject [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_WIDTH put: anObject
+	handle doubleAt: OFFSET_WIDTH put: anObject asFloat
 ]
 
 { #category : #'accessing structure variables' }
@@ -68,7 +73,7 @@ NSRect >> x [
 { #category : #'accessing structure variables' }
 NSRect >> x: anObject [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_X put: anObject
+	handle doubleAt: OFFSET_X put: anObject asFloat
 ]
 
 { #category : #'accessing structure variables' }
@@ -80,5 +85,5 @@ NSRect >> y [
 { #category : #'accessing structure variables' }
 NSRect >> y: anObject [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_Y put: anObject
+	handle doubleAt: OFFSET_Y put: anObject asFloat
 ]
