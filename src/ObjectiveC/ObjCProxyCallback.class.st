@@ -10,8 +10,8 @@ ObjCProxyCallback >> newParser [
 ]
 
 { #category : #initialization }
-ObjCProxyCallback >> parseSignature: aString [
-	^ self newParser parseSignature: aString
+ObjCProxyCallback >> parseSignature: signature [
+	^ self newParser parseSignature: signature
 ]
 
 { #category : #evaluation }

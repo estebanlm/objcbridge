@@ -36,16 +36,18 @@ ObjCObject >> doesNotUnderstand: aMessage [
 		ifTrue: [ ^ super doesNotUnderstand: aMessage ].
 	shadowMethod := ObjCSessionCache current
 		methodAt: objCMethod getHandle
-		ifAbsentPut: [
+		ifAbsentPut: [ 
 			(ObjCCalloutMethodBuilder buildMethod: objCMethod)
-				selector: aMessage selector;
+				selector: ((aMessage numArgs = 0
+					ifTrue: [ aMessage selector, #_objc_receiver:objc_selector: ]
+					ifFalse: [ #objc_receiver:objc_selector:, aMessage selector ])
+					asSymbol);
 				methodClass: self class;
 				yourself ].
 	arguments := ({ self. objCMethod method_getName }, (aMessage arguments collect: #adaptToObjC)).
 	^ shadowMethod 
 		valueWithReceiver: self
 		arguments: arguments
-
 ]
 
 { #category : #private }
