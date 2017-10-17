@@ -7,6 +7,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'selectors',
+		'proxies',
 		'classesByName',
 		'classesByAddress'
 	],
@@ -95,8 +96,37 @@ ObjCSessionCache >> classNamed: aName ifAbsentPut: aBlock [
 ObjCSessionCache >> initialize [
 	super initialize.
 	selectors := Dictionary new.
+	proxies := Dictionary new.
 	classesByName := Dictionary new.	
 	classesByAddress := Dictionary new
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> proxyAt: aName [
+	^ proxies
+		at: aName
+		ifAbsent: [ NotFound signalFor: aName ]
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> proxyAt: aName ifAbsent: aBlock [
+	^ proxies 
+		at: aName 
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> proxyAt: aName ifAbsentPut: aBlock [
+	^ proxies 
+		at: aName 
+		ifAbsentPut: aBlock
+]
+
+{ #category : #accessing }
+ObjCSessionCache >> proxyAt: aName put: anObjCClass [
+	^ proxies
+		at: aName
+		put: anObjCClass
 ]
 
 { #category : #initialization }

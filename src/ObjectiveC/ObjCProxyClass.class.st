@@ -9,9 +9,6 @@ Class {
 		'instances',
 		'callbacks'
 	],
-	#classVars : [
-		'Proxies'
-	],
 	#category : #ObjectiveC-Proxy
 }
 
@@ -22,10 +19,9 @@ ObjCProxyClass class >> classFor: aClass [
 
 { #category : #accessing }
 ObjCProxyClass class >> classFor: aClass withSuperclass: superclassName [
-	Proxies ifNil: [ Proxies := Dictionary new ].
-	^ Proxies 
-		at: aClass name
-		ifAbsentPut: [ self createProxyFor: aClass superclass: superclassName ] 
+	^ ObjCSessionCache current
+		proxyAt: aClass name
+		ifAbsentPut: [ self createProxyFor: aClass superclass: superclassName ]
 ]
 
 { #category : #private }
@@ -33,11 +29,6 @@ ObjCProxyClass class >> createProxyFor: aClass superclass: superclassName [
 	^self basicNew 
 		initializeClass: aClass superclass: superclassName;
 		yourself
-]
-
-{ #category : #'class initialization' }
-ObjCProxyClass class >> initialize [ 
-	SessionManager default registerUserClassNamed: self name
 ]
 
 { #category : #'instance creation' }
@@ -51,10 +42,11 @@ ObjCProxyClass class >> newFor: anObject withSuperclass: superclassName [
 		newFor: anObject
 ]
 
-{ #category : #'system startup' }
-ObjCProxyClass class >> startUp: resuming [
-	resuming ifFalse: [ ^ self ].
-	Proxies := nil
+{ #category : #accessing }
+ObjCProxyClass class >> reinstallClassFor: aClass [
+	| currentProxyClass |
+	currentProxyClass := ObjCSessionCache current proxyAt: aClass name.
+	currentProxyClass rebuildMethodList.
 ]
 
 { #category : #private }
@@ -91,6 +83,11 @@ ObjCProxyClass >> alloc [
 		ifTrue: [ receiver initializeProxy: proxy ]
 		ifFalse: [ receiver initialize ].
 	^ instance
+]
+
+{ #category : #private }
+ObjCProxyClass >> class: cls respondsToSelector: sel [
+	^ self ffiCall: #(BOOL class_respondsToSelector(Class cls, SEL sel))
 ]
 
 { #category : #private }
@@ -211,6 +208,17 @@ ObjCProxyClass >> proxyClass [
 { #category : #accessing }
 ObjCProxyClass >> proxyClassName [
 	^ 'PharoProxyFor', self receiverClass name
+]
+
+{ #category : #private }
+ObjCProxyClass >> rebuildMethodList [
+	"We cannot remove methods from a class... we just add the new ones"
+	(Pragma allNamed: #objCSignature: in: self receiverClass)
+		reject: [ :each | 
+			self 
+				class: self proxyClass 
+				respondsToSelector: each methodSelector asObjCSelector ] 
+		thenDo: [ :each | self addMethodPragma: each in: self proxyClass ]
 ]
 
 { #category : #accessing }
