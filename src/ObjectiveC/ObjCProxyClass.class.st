@@ -15,18 +15,23 @@ Class {
 	#category : #ObjectiveC-Proxy
 }
 
-{ #category : #private }
+{ #category : #accessing }
 ObjCProxyClass class >> classFor: aClass [
+	^ self classFor: aClass withSuperclass: 'NSObject'
+]
+
+{ #category : #accessing }
+ObjCProxyClass class >> classFor: aClass withSuperclass: superclassName [
 	Proxies ifNil: [ Proxies := Dictionary new ].
 	^ Proxies 
 		at: aClass name
-		ifAbsentPut: [ self createProxyFor: aClass ] 
+		ifAbsentPut: [ self createProxyFor: aClass superclass: superclassName ] 
 ]
 
 { #category : #private }
-ObjCProxyClass class >> createProxyFor: aClass [
+ObjCProxyClass class >> createProxyFor: aClass superclass: superclassName [
 	^self basicNew 
-		initializeClass: aClass;
+		initializeClass: aClass superclass: superclassName;
 		yourself
 ]
 
@@ -38,6 +43,12 @@ ObjCProxyClass class >> initialize [
 { #category : #'instance creation' }
 ObjCProxyClass class >> newFor: anObject [ 
 	^(self classFor: anObject class) newFor: anObject
+]
+
+{ #category : #'instance creation' }
+ObjCProxyClass class >> newFor: anObject withSuperclass: superclassName [
+	^ (self classFor: anObject class withSuperclass: superclassName)
+		newFor: anObject
 ]
 
 { #category : #'system startup' }
@@ -65,6 +76,21 @@ ObjCProxyClass >> addMethodPragma: aPragma in: theClass [
 		addMethod: aPragma method selector 
 		signature: aPragma arguments first
 		in: theClass 	
+]
+
+{ #category : #'instance creation' }
+ObjCProxyClass >> alloc [
+	| receiver proxy instance |
+	
+	proxy := self proxyClass alloc.
+	receiver := self receiverClass basicNew.
+	instance := instances add: (ObjCProxyObject 
+		proxy: proxy
+		receiver: receiver).
+	(receiver respondsTo: #initializeProxy:)
+		ifTrue: [ receiver initializeProxy: proxy ]
+		ifFalse: [ receiver initialize ].
+	^ instance
 ]
 
 { #category : #private }
@@ -111,29 +137,24 @@ ObjCProxyClass >> findInstance: addressNumber [
 ]
 
 { #category : #initialization }
-ObjCProxyClass >> initialize [
-	super initialize.
+ObjCProxyClass >> initializeClass: aClass superclass: superclassName [
+	self initialize.
+	receiverClass := aClass.
 	instances := WeakSet new.
 	callbacks := Set new.
-	self installProxyClass.
+	self installProxyClassWithSuperclass: superclassName.
 	proxyClass := self proxyClassName inObjC.
 ]
 
-{ #category : #initialization }
-ObjCProxyClass >> initializeClass: aClass [ 
-	receiverClass := aClass.
-	self initialize
-]
-
 { #category : #private }
-ObjCProxyClass >> installProxyClass [
+ObjCProxyClass >> installProxyClassWithSuperclass: superclassName [
 	"Installs a new SmalltalkProxy class in the system. 
 	 ProxyCallbacks  is a class side attribute to keep the callbacks and prevent them from being 
 	 garbage collected"
 	
 	 self
 		createClassNamed: self proxyClassName
-		superclass: 'NSObject' 
+		superclass: superclassName 
 		into: [ :theClass :theSuperclass | 
 			self flag: #todo.
 			"(Pragma allNamed: #objCSignature: in: self receiverClass theMetaClass) 
