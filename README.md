@@ -4,6 +4,8 @@ Yet another Pharo-ObjectiveC bridge, using UnifiedFFI as backend.
 # Install
 While in fact this can be used generically on ObjC, for obvious reasons it has been tested just on macOS :)
 
+**IMPORTANT:** You need Pharo7+ to run this.
+
 ```Smalltalk
 Metacello new 
   repository: 'github://estebanlm/objcbridge/src';
