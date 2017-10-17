@@ -12,6 +12,13 @@ Class {
 	#category : #ObjectiveC-Core
 }
 
+{ #category : #finalization }
+ObjCObject class >> finalizeResourceData: handle [
+	handle isNull ifTrue: [ ^ self ].
+	(ObjCObject fromHandle: handle) release.
+	handle asExternalAddress beNull
+]
+
 { #category : #libraries }
 ObjCObject class >> lookup: symbol inLibrary: libraryName [
 	^ self loadSymbol: symbol module: libraryName
@@ -113,8 +120,7 @@ ObjCObject >> objCPerform: aSEL [
 	^ self ffiCall: #(id objc_msgSend(self, SEL aSEL))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ObjCObject >> release [
-	self flag: #todo.
-	"Is it correct to avoid freeing pointers of objective-c?"
+	self objCPerform: #release asObjCSelector
 ]

@@ -37,6 +37,12 @@ ObjCSessionCache class >> shutDown: quitting [
 	Current := nil
 ]
 
+{ #category : #'system startup' }
+ObjCSessionCache class >> startUp: resuming [
+	resuming ifFalse: [ ^ self ].
+	Current := nil.
+]
+
 { #category : #accessing }
 ObjCSessionCache >> classAt: anAddress [
 	^ classesByAddress
