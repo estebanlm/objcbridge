@@ -41,6 +41,12 @@ ObjCLibrary class >> ffiBindingOf: aName [
 
 { #category : #'class initialization' }
 ObjCLibrary class >> initialize [
+	self initializeObjCTypes
+
+]
+
+{ #category : #'class initialization' }
+ObjCLibrary class >> initializeObjCTypes [
 	ObjCTypes := self createObjCTypes
 ]
 
