@@ -114,7 +114,7 @@ MacOSXAlertDelegate class >> exampleWithFunction [
 		addButtonWithTitle: 'Cancel' asNSString;
 		addButtonWithTitle: 'Ok' asNSString;
 		yourself.
-self halt.
+
 	alert 
 		beginSheetModalForWindow: win
 		completionHandler: (function := FFICallback 
