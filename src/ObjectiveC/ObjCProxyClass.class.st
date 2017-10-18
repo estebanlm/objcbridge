@@ -74,7 +74,7 @@ ObjCProxyClass >> addMethodPragma: aPragma in: theClass [
 ObjCProxyClass >> alloc [
 	| receiver proxy instance |
 	
-	proxy := self proxyClass alloc.
+	proxy := self proxyClass alloc autoRelease.
 	receiver := self receiverClass basicNew.
 	instance := instances add: (ObjCProxyObject 
 		proxy: proxy
