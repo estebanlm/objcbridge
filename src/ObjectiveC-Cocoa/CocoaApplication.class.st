@@ -36,5 +36,7 @@ CocoaApplication class >> withAutoreleasePoolDo: aBlock [
 { #category : #running }
 CocoaApplication >> run [
 	"sub... here put main menu, etc."
-	Current := self
+	Current := self.
+	"Smalltalk at: #CocoaApp put: self."
+	
 ]
