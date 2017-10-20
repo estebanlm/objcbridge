@@ -60,6 +60,7 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 		at: ObjCObject					put: $@;
 		at: ObjCClass					put: $#;
 		at: ObjCSelector				put: $:;
+		at: FFIBool 						put: $c;
 		at: FFICharacterType 			put: $c;
 		at: FFIUInt8						put: $C;
 		at: FFIInt16 					put: $s;
