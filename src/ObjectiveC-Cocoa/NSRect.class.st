@@ -40,6 +40,11 @@ NSRect class >> x: x y: y width: w height: h [
 		yourself
 ]
 
+{ #category : #converting }
+NSRect >> asRectangle [
+	^ (self x @ self y) extent: (self width @ self height) 
+]
+
 { #category : #'accessing structure variables' }
 NSRect >> height [
 	"This method was automatically generated"

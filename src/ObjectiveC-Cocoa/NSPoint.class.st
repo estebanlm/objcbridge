@@ -37,6 +37,11 @@ NSPoint class >> x: x y: y [
 		yourself. 
 ]
 
+{ #category : #converting }
+NSPoint >> asPoint [
+	^ self x @ self y
+]
+
 { #category : #accessing }
 NSPoint >> height [
 	^ self y
