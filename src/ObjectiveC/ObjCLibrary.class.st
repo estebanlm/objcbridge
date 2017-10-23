@@ -19,6 +19,7 @@ ObjCLibrary class >> createObjCTypes [
 		id 			ObjCObject
 		IMP 		ObjCProxyCallback
 		BOOL 		bool
+		CGFloat 	double "float in 32bits"
 	)
 ]
 

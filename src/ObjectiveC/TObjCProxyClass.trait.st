@@ -22,5 +22,6 @@ TObjCProxyClass classSide >> proxyClass [
 
 { #category : #utils }
 TObjCProxyClass classSide >> reinstall [
+	<script>
 	ObjCProxyClass reinstallClassFor: self
 ]

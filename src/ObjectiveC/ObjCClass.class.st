@@ -19,7 +19,7 @@ ObjCClass class >> basicLookup: aName [
 { #category : #private }
 ObjCClass class >> frameworkLibraryNameFor: frameworkName [
 	^'/System/Library/Frameworks/', frameworkName,
-			'.framework/Versions/C/', frameworkName
+			'.framework/', frameworkName
 ]
 
 { #category : #'objective-c run-time' }

@@ -9,6 +9,11 @@ Class {
 	#category : #ObjectiveC-Cocoa
 }
 
+{ #category : #private }
+CocoaViewController class >> objCSuperclassName [
+	^ 'NSViewController'
+]
+
 { #category : #'as yet unclassified' }
 CocoaViewController >> subviewWithIdentifier: aString in: view [
 	^ self 
