@@ -1,6 +1,9 @@
 Class {
 	#name : #MacOSXWindowDelegate,
 	#superclass : #Object,
+	#instVars : [
+		'proxy'
+	],
 	#category : #ObjectiveC-Cocoa-Examples
 }
 
@@ -40,6 +43,11 @@ MacOSXWindowDelegate class >> example [
 	window center.
 	window makeKeyAndOrderFront: ObjCObject null.
 	pool release
+]
+
+{ #category : #accessing }
+MacOSXWindowDelegate >> proxy [
+	^ proxy
 ]
 
 { #category : #'event handling' }

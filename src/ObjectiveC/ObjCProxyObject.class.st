@@ -1,18 +1,24 @@
+"
+I represent an object that acts as an bridge between Pharo and Objective-C. 
+I contain a reference to the object in Objective-C in the attribute #proxy. 
+
+While objects wanting to act as interface do not need to subclass me, that have to conform the trait TObjCProxyClass.
+"
 Class {
 	#name : #ObjCProxyObject,
 	#superclass : #Object,
+	#traits : 'TObjCProxyClass',
+	#classTraits : 'TObjCProxyClass classTrait',
 	#instVars : [
-		'proxy',
-		'receiver'
+		'proxy'
 	],
 	#category : #ObjectiveC-Proxy
 }
 
 { #category : #'instance creation' }
-ObjCProxyObject class >> proxy: aProxy receiver: anObject [ 
+ObjCProxyObject class >> proxy: aProxy [ 
 	^ self new 
-		proxy: aProxy; 
-		receiver: anObject;
+		proxy: aProxy;
 		yourself
 ]
 
@@ -21,17 +27,7 @@ ObjCProxyObject >> proxy [
 	^ proxy
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 ObjCProxyObject >> proxy: anObject [
 	proxy := anObject.
-]
-
-{ #category : #accessing }
-ObjCProxyObject >> receiver [
-	^ receiver
-]
-
-{ #category : #private }
-ObjCProxyObject >> receiver: anObject [
-	receiver := anObject
 ]

@@ -1,8 +1,6 @@
 Class {
 	#name : #CocoaWindowController,
-	#superclass : #Object,
-	#traits : 'TObjCProxyClass',
-	#classTraits : 'TObjCProxyClass classTrait',
+	#superclass : #ObjCProxyObject,
 	#pools : [
 		'CocoaConstants'
 	],

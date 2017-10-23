@@ -25,3 +25,13 @@ TObjCProxyClass classSide >> reinstall [
 	<script>
 	ObjCProxyClass reinstallClassFor: self
 ]
+
+{ #category : #accessing }
+TObjCProxyClass >> proxy [
+	^ self required
+]
+
+{ #category : #accessing }
+TObjCProxyClass >> proxy: anObjCObject [
+	^ self required
+]

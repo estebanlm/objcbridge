@@ -72,16 +72,13 @@ ObjCProxyClass >> addMethodPragma: aPragma in: theClass [
 
 { #category : #'instance creation' }
 ObjCProxyClass >> alloc [
-	| receiver proxy instance |
+	| proxy instance |
 	
 	proxy := self proxyClass alloc autoRelease.
-	receiver := self receiverClass basicNew.
-	instance := instances add: (ObjCProxyObject 
-		proxy: proxy
-		receiver: receiver).
-	(receiver respondsTo: #initializeProxy:)
-		ifTrue: [ receiver initializeProxy: proxy ]
-		ifFalse: [ receiver initialize ].
+	instance := instances add: (self receiverClass basicNew
+		proxy: proxy;
+		yourself).
+	instance initialize.
 	^ instance
 ]
 
@@ -131,7 +128,7 @@ ObjCProxyClass >> createClassNamed: className superclass: superclassName  into: 
 
 { #category : #private }
 ObjCProxyClass >> findInstance: addressNumber [
-	^ instances detect: [ :each | each proxy getHandle asInteger = addressNumber ].
+	^ instances detect: [ :each | (each instVarNamed: 'proxy') getHandle asInteger = addressNumber ].
 ]
 
 { #category : #private }
@@ -209,14 +206,15 @@ ObjCProxyClass >> new [
 
 { #category : #'instance creation' }
 ObjCProxyClass >> newFor: anObject [ 
-	| newInstance |
+	| proxy instance |
 
-	newInstance := (ObjCProxyObject 
-		proxy: proxyClass alloc init 
-		receiver: anObject).
-	instances add: newInstance.
+	proxy := self proxyClass alloc autoRelease.
+	instance := instances add: (self receiverClass basicNew
+		proxy: proxy;
+		initialize;
+		yourself).
 	
-	^ newInstance
+	^ instance
 ]
 
 { #category : #private }
@@ -272,7 +270,7 @@ ObjCProxyClass >> receiverClass [
 ObjCProxyClass >> sendTo: receiver selector: aSelector withArguments: args [
 	| proxyReceiver |
 	
-	proxyReceiver := (self findInstance: receiver asInteger) receiver.
+	proxyReceiver := self findInstance: receiver asInteger.
 	^ [ proxyReceiver
 		perform: aSelector 
 		withArguments: args ]

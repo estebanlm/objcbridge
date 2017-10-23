@@ -1,6 +1,9 @@
 Class {
 	#name : #MacOSXAlertDelegate,
 	#superclass : #Object,
+	#instVars : [
+		'proxy'
+	],
 	#category : #ObjectiveC-Cocoa-Examples
 }
 
@@ -136,4 +139,9 @@ MacOSXAlertDelegate >> alertDidEnd: alert  returnCode: returnCode contextInfo: c
 	<objCSignature: #(void (id alert, int returnCode, void* contextInfo))>
 
 	#NSApplication inObjC sharedApplication stopModalWithCode: returnCode
+]
+
+{ #category : #accessing }
+MacOSXAlertDelegate >> proxy [
+	^ proxy
 ]

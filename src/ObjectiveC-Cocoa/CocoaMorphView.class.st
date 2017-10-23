@@ -1,10 +1,7 @@
 Class {
 	#name : #CocoaMorphView,
-	#superclass : #Object,
-	#traits : 'TObjCProxyClass',
-	#classTraits : 'TObjCProxyClass classTrait',
+	#superclass : #ObjCProxyObject,
 	#instVars : [
-		'view',
 		'morph'
 	],
 	#category : #ObjectiveC-Cocoa
@@ -21,12 +18,12 @@ CocoaMorphView >> drawRect: r [
 
 	| bounds ctx surface |
 
-	bounds := view bounds asRectangle.
+	bounds := self proxy bounds asRectangle.
 	ctx := #NSGraphicsContext inObjC currentContext graphicsPort.
+	
 	"// Make the CGContext coordinate system sane, as expected by Cairo
 	CGContextTranslateCTM (ctx, 0.0, height);
 	CGContextScaleCTM (ctx, 1.0, -1.0);"
-
 	self translateCTMCGContext: ctx x: 0.0 y: bounds height.
 	self scaleCTMCGContext: ctx x: 1.0 y: -1.0.
 
@@ -41,10 +38,9 @@ CocoaMorphView >> drawRect: r [
 ]
 
 { #category : #initialization }
-CocoaMorphView >> initializeProxy: aNSView [
-	self initialize.
-	aNSView init.
-	view := aNSView
+CocoaMorphView >> initialize [
+	super initialize.
+	self proxy init
 ]
 
 { #category : #accessing }
@@ -68,5 +64,5 @@ CocoaMorphView >> scaleCTMCGContext: c x: sx y: sy [
 CocoaMorphView >> translateCTMCGContext: c x: tx y: ty [
 	^ self 
 		ffiCall: #(void CGContextTranslateCTM("CGContextRef"void *c, double tx, double ty))	
-		module: CoreGraphicsFramework
+		module: CoreGraphicsLibrary
 ]
