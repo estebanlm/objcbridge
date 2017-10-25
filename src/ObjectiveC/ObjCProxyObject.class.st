@@ -22,6 +22,17 @@ ObjCProxyObject class >> proxy: aProxy [
 		yourself
 ]
 
+{ #category : #initialization }
+ObjCProxyObject >> initialize [
+	super initialize.
+	self initializeProxy
+]
+
+{ #category : #initialization }
+ObjCProxyObject >> initializeProxy [
+	
+]
+
 { #category : #accessing }
 ObjCProxyObject >> proxy [
 	^ proxy

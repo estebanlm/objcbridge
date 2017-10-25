@@ -78,7 +78,7 @@ ObjCProxyClass >> alloc [
 	instance := instances add: (self receiverClass basicNew
 		proxy: proxy;
 		yourself).
-	instance initialize.
+		
 	^ instance
 ]
 
@@ -209,9 +209,8 @@ ObjCProxyClass >> newFor: anObject [
 	| proxy instance |
 
 	proxy := self proxyClass alloc autoRelease.
-	instance := instances add: (self receiverClass basicNew
+	instance := instances add: (anObject
 		proxy: proxy;
-		initialize;
 		yourself).
 	
 	^ instance

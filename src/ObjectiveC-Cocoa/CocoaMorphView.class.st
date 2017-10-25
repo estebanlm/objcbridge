@@ -38,8 +38,7 @@ CocoaMorphView >> drawRect: r [
 ]
 
 { #category : #initialization }
-CocoaMorphView >> initialize [
-	super initialize.
+CocoaMorphView >> initializeProxy [
 	self proxy init
 ]
 
