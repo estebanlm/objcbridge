@@ -33,9 +33,15 @@ CocoaApplication class >> withAutoreleasePoolDo: aBlock [
 	aBlock ensure: [ pool release ]
 ]
 
+{ #category : #accessing }
+CocoaApplication >> reset [
+	"Clean application"
+]
+
 { #category : #running }
 CocoaApplication >> run [
 	"sub... here put main menu, etc."
+	Current ifNotNil: [ Current reset ].
 	Current := self.
 	"Smalltalk at: #CocoaApp put: self."
 	
