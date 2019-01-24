@@ -9,7 +9,7 @@ Class {
 		'instances',
 		'callbacks'
 	],
-	#category : #ObjectiveC-Proxy
+	#category : #'ObjectiveC-Proxy'
 }
 
 { #category : #accessing }

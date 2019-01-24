@@ -9,7 +9,7 @@ Class {
 	#superclass : #FFIExternalStructure,
 	#traits : 'TObjCLibrary',
 	#classTraits : 'TObjCLibrary classTrait',
-	#category : #ObjectiveC-Inner
+	#category : #'ObjectiveC-Inner'
 }
 
 { #category : #accessing }

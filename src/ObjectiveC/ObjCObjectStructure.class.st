@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'OFFSET_ISA'
 	],
-	#category : #ObjectiveC-Inner
+	#category : #'ObjectiveC-Inner'
 }
 
 { #category : #'fields description' }

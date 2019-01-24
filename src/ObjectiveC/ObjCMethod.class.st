@@ -6,7 +6,7 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TObjCLibrary',
 	#classTraits : 'TObjCLibrary classTrait',
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #accessing }

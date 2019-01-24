@@ -8,7 +8,7 @@ Some remarks:
 "
 Trait {
 	#name : #TObjCProxyClass,
-	#category : #ObjectiveC-Proxy
+	#category : #'ObjectiveC-Proxy'
 }
 
 { #category : #'instance creation' }

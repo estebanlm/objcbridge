@@ -18,7 +18,7 @@ Class {
 		'OFFSET_SUPER_CLASS',
 		'OFFSET_VERSION'
 	],
-	#category : #ObjectiveC-Inner
+	#category : #'ObjectiveC-Inner'
 }
 
 { #category : #'field definition' }

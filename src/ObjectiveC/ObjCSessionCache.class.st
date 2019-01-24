@@ -14,7 +14,7 @@ Class {
 	#classVars : [
 		'Current'
 	],
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #accessing }

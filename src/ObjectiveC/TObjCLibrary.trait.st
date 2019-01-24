@@ -3,7 +3,7 @@ I define a class as part of the ObjC infrastructure.
 "
 Trait {
 	#name : #TObjCLibrary,
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #accessing }

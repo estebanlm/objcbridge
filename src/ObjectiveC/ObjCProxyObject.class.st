@@ -12,7 +12,7 @@ Class {
 	#instVars : [
 		'proxy'
 	],
-	#category : #ObjectiveC-Proxy
+	#category : #'ObjectiveC-Proxy'
 }
 
 { #category : #'instance creation' }

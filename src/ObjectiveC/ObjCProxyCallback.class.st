@@ -1,7 +1,7 @@
 Class {
 	#name : #ObjCProxyCallback,
 	#superclass : #FFICallback,
-	#category : #ObjectiveC-Proxy
+	#category : #'ObjectiveC-Proxy'
 }
 
 { #category : #private }

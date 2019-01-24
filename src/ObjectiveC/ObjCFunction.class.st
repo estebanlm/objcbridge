@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'callback'
 	],
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #initialization }

@@ -14,7 +14,7 @@ Class {
 		'ReversedMethodTypeMap',
 		'TypeQualifiers'
 	],
-	#category : #ObjectiveC-Builder
+	#category : #'ObjectiveC-Builder'
 }
 
 { #category : #'class initialization' }

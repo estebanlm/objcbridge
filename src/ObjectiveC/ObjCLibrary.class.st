@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'ObjCTypes'
 	],
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #private }

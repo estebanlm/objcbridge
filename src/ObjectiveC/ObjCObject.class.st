@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'isa'
 	],
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #finalization }

@@ -13,7 +13,7 @@ Class {
 		'OFFSET_METHOD_NAME',
 		'OFFSET_METHOD_TYPES'
 	],
-	#category : #ObjectiveC-Inner
+	#category : #'ObjectiveC-Inner'
 }
 
 { #category : #'field definition' }

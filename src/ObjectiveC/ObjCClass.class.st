@@ -8,7 +8,7 @@ Class {
 		'methods',
 		'classMethods'
 	],
-	#category : #ObjectiveC-Core
+	#category : #'ObjectiveC-Core'
 }
 
 { #category : #private }
