@@ -46,7 +46,7 @@ ObjCCalloutMethodBuilder >> createFFICalloutLiteralFromSpec: spec [
 	
 	externalFunction := ExternalLibraryFunction
 		name: spec functionName
-		module: self moduleName
+		module: self libraryName
 		callType: self callType
 		returnType: return
 		argumentTypes: arguments.
@@ -115,8 +115,8 @@ ObjCCalloutMethodBuilder >> generateMethodFromSpec: spec [
 ]
 
 { #category : #accessing }
-ObjCCalloutMethodBuilder >> moduleName [
-	^ ObjCLibrary uniqueInstance moduleName
+ObjCCalloutMethodBuilder >> libraryName [
+	^ ObjCLibrary uniqueInstance libraryName
 ]
 
 { #category : #private }

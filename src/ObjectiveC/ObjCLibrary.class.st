@@ -57,6 +57,6 @@ ObjCLibrary >> ffiBindingOf: aName [
 ]
 
 { #category : #'accessing platform' }
-ObjCLibrary >> macModuleName [
+ObjCLibrary >> macLibraryName [
 	^ 'libobjc.dylib'
 ]
