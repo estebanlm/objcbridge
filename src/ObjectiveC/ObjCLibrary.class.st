@@ -4,6 +4,9 @@ I point to libobjc and I provide mapping to it's types.
 Class {
 	#name : #ObjCLibrary,
 	#superclass : #FFILibrary,
+	#instVars : [
+		'runner'
+	],
 	#classVars : [
 		'ObjCTypes'
 	],
@@ -70,5 +73,10 @@ ObjCLibrary >> macLibraryName [
 { #category : #accessing }
 ObjCLibrary >> runner [
 
-	^ TFMainThreadRunner uniqueInstance
+	(runner isNil or: [ runner isNull ]) ifTrue: [  
+		runner := Smalltalk vm isRunningInWorkerThread  
+			ifTrue: [ TFMainThreadRunner uniqueInstance ]
+			ifFalse: [ TFSameThreadRunner uniqueInstance ] ].
+
+	^ runner
 ]
