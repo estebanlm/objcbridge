@@ -5,7 +5,8 @@ Class {
 	#name : #ObjCLibrary,
 	#superclass : #FFILibrary,
 	#instVars : [
-		'runner'
+		'runner',
+		'session'
 	],
 	#classVars : [
 		'ObjCTypes'
@@ -72,8 +73,9 @@ ObjCLibrary >> macLibraryName [
 
 { #category : #accessing }
 ObjCLibrary >> runner [
-
-	(runner isNil or: [ runner isNull ]) ifTrue: [  
+ 
+	(session = Smalltalk session) ifFalse: [
+		session :=  Smalltalk session. 
 		runner := Smalltalk vm isRunningInWorkerThread  
 			ifTrue: [ TFMainThreadRunner uniqueInstance ]
 			ifFalse: [ TFSameThreadRunner uniqueInstance ] ].
