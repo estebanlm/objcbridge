@@ -51,6 +51,12 @@ ObjCLibrary class >> initializeObjCTypes [
 	ObjCTypes := self createObjCTypes
 ]
 
+{ #category : #converting }
+ObjCLibrary >> calloutAPIClass [ 
+
+	^ TFCalloutAPI
+]
+
 { #category : #'accessing platform' }
 ObjCLibrary >> ffiBindingOf: aName [
 	^ self class ffiBindingOf: aName
@@ -59,4 +65,10 @@ ObjCLibrary >> ffiBindingOf: aName [
 { #category : #'accessing platform' }
 ObjCLibrary >> macLibraryName [
 	^ 'libobjc.dylib'
+]
+
+{ #category : #accessing }
+ObjCLibrary >> runner [
+
+	^ TFMainThreadRunner uniqueInstance
 ]
