@@ -83,7 +83,9 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
 	spec arguments withIndexDo: [ :each :index | 
 		each 
 			loader: (FFIMethodArgument new argName: 'arg', index asString);
-			emitArgument: builder context: nil ].
+			emitArgument: builder 
+				context: nil
+				inCallout: self requestor ].
 	"create the array"
 	builder pushConsArray: (spec returnType isTypeStructure 
 		ifTrue: [ numArgs + 1 ]
