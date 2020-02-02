@@ -8,6 +8,9 @@ Some remarks:
 "
 Trait {
 	#name : #TObjCProxyClass,
+	#instVars : [
+		'proxy'
+	],
 	#category : #'ObjectiveC-Proxy'
 }
 
@@ -41,10 +44,12 @@ TObjCProxyClass classSide >> reinstall [
 
 { #category : #accessing }
 TObjCProxyClass >> proxy [
-	^ self required
+
+	^ proxy
 ]
 
 { #category : #accessing }
 TObjCProxyClass >> proxy: anObjCObject [
-	^ self required
+
+	proxy := anObjCObject
 ]

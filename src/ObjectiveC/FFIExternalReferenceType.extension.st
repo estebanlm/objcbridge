@@ -2,5 +2,5 @@ Extension { #name : #FFIExternalReferenceType }
 
 { #category : #'*ObjectiveC' }
 FFIExternalReferenceType >> objCSignatureType [
-	^ ObjCSpecParser reverseType: self objectClass theNonMetaClass
+	^ ObjCSpecParser reverseType: self objectClass instanceSide
 ]

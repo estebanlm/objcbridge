@@ -94,6 +94,7 @@ ObjCProxyClass >> class_addMethodClass: cls selector: name implementation: imp s
 
 { #category : #private }
 ObjCProxyClass >> createCallbackFor: aSelector signature: aString [
+
 	^ ObjCProxyCallback 
 		signature: aString
 		block: [ :receiver :ignoredSelector :args | 

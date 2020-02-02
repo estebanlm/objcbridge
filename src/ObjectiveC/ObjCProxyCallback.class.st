@@ -1,28 +1,25 @@
 Class {
 	#name : #ObjCProxyCallback,
 	#superclass : #FFICallback,
+	#traits : 'TObjCLibrary',
+	#classTraits : 'TObjCLibrary classTrait',
 	#category : #'ObjectiveC-Proxy'
 }
 
-{ #category : #private }
-ObjCProxyCallback >> newParser [
-	^ ObjCSpecParser new
-]
-
 { #category : #initialization }
 ObjCProxyCallback >> parseSignature: signature [
+
 	^ self newParser parseSignature: signature
 ]
 
 { #category : #evaluation }
-ObjCProxyCallback >> valueWithContext: callbackContext sp: stackPointer [ 
-	| argumentValues |
-	
-	argumentValues := self argumentsFor: stackPointer context: callbackContext.
-	^ functionSpec returnType 
-		callbackReturnOn: callbackContext 
-		for: (block 
-			value: argumentValues first 
-			value: argumentValues second 
-			value: (argumentValues allButFirst: 2))
+ObjCProxyCallback >> valueWithArguments: args [
+
+	^ [ block 
+			value: args first "self"
+			value: args second "SEL"
+			value: (args allButFirst: 2) "arguments" ]
+		on: Error 
+		fork: [ :e | e debug ]
+		return: [ self returnOnError ]
 ]

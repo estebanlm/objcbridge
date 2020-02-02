@@ -166,17 +166,16 @@ ObjCSpecParser >> parseObjCSignature: aString [
 	^ FFIFunctionSpec new
 		returnType: arguments first;
 		arguments: arguments allButFirst asArray;
-		yourself.
-	
+		yourself
 ]
 
 { #category : #parsing }
 ObjCSpecParser >> parseSignature: signature [
-	| spec |
+	| spec parser |
 	
-	spec := self newFunctionParser
-		parseAnonymousFunction: signature.
-		
+	parser := self newFunctionParser.
+	spec := parser parseAnonymousFunction: signature.
+	spec resolveUsing: parser requestor.
 	spec arguments: { self parseType: '@'. self parseType: ':' }, spec arguments.
 	
 	^ spec
@@ -190,8 +189,8 @@ ObjCSpecParser >> parseType: aString [
 { #category : #parsing }
 ObjCSpecParser >> reverseParseSignature: spec [
 	^ String streamContents: [ :aStream |
-		aStream <<spec returnType objCSignatureType.
-		spec arguments 
+		aStream << spec returnType objCSignatureType.
+		spec arguments
 			do: [ :each | aStream << each objCSignatureType ] ].
 ]
 

@@ -12,5 +12,6 @@ FFIExternalType >> isTypeStructure [
 
 { #category : #'*ObjectiveC' }
 FFIExternalType >> objCSignatureType [
+
 	^ ObjCSpecParser reverseType: self class
 ]

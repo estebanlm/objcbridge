@@ -7,5 +7,6 @@ FFIExternalStructureType >> isTypeStructure [
 
 { #category : #'*ObjectiveC' }
 FFIExternalStructureType >> objCSignatureType [
+
 	^ '{', self objectClass name, '}'
 ]
