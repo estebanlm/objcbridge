@@ -44,7 +44,7 @@ ObjCObject >> descriptionString [
 ObjCObject >> doesNotUnderstand: aMessage [
 	| shadowMethod arguments |
 
-	shadowMethod := self installedMethodForMessage: aMessage.
+	shadowMethod := self installedMethodForMessage: aMessage sender: thisContext sender.
 	shadowMethod ifNil: [ ^ super doesNotUnderstand: aMessage ].
 	arguments := ({ self. aMessage selector asObjCSelector }, (aMessage arguments collect: #adaptToObjC)).
 	^ shadowMethod 
@@ -73,7 +73,7 @@ ObjCObject >> installedMethodAt: aSelector [
 ]
 
 { #category : #private }
-ObjCObject >> installedMethodForMessage: aMessage [
+ObjCObject >> installedMethodForMessage: aMessage sender: aContext [
 	| method objCMethod |
 
 	method := self installedMethodAt: aMessage selector.
@@ -84,7 +84,7 @@ ObjCObject >> installedMethodForMessage: aMessage [
 		ifTrue: [ ^ nil ].
 	^ self 
 		installMethodAt: aMessage selector
-		implementation: ((ObjCCalloutMethodBuilder buildMethod: objCMethod)
+		implementation: ((ObjCCalloutMethodBuilder buildMethod: objCMethod sender: aContext)
 				selector: ((aMessage numArgs = 0
 					ifTrue: [ aMessage selector, #_rec:_sel: ]
 					ifFalse: [ #_rec:_sel:, aMessage selector ])

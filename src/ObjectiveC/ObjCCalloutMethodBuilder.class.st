@@ -8,8 +8,10 @@ Class {
 }
 
 { #category : #'builder api' }
-ObjCCalloutMethodBuilder class >> buildMethod: objCMethod [
+ObjCCalloutMethodBuilder class >> buildMethod: objCMethod sender: aContext [
+
 	^ self new 
+		sender: aContext;
 		requestor: (FFICallout new
 			requestor: ObjCLibrary;
 			yourself);
@@ -24,7 +26,9 @@ ObjCCalloutMethodBuilder >> adaptSpecToReturnType: aSpec [
 { #category : #'builder api' }
 ObjCCalloutMethodBuilder >> buildMethod: objCMethod [
 	| spec |
+	
 	spec := ObjCSpecParser new parseMethod: objCMethod.
+	spec resolveUsing: self requestor.
 	self adaptSpecToReturnType: spec.
 	^ self generateMethodFromSpec: spec
 ]
@@ -39,17 +43,16 @@ ObjCCalloutMethodBuilder >> createFFICalloutLiteralFromSpec: spec [
 	| externalFunction return arguments |
 	
 	return := spec returnType externalTypeWithArity.
-	arguments := spec arguments collect: #externalTypeWithArity.
+	arguments := spec arguments collect: [ :each | each tfExternalTypeWithArity ].
 	spec returnType isTypeStructure ifTrue: [ 
-		arguments := arguments copyWithFirst: spec returnType externalType asPointerType.
+		arguments := arguments copyWithFirst: spec returnType tfExternalType asPointerType.
 		return := FFIVoid externalType ].
 	
-	externalFunction := ExternalLibraryFunction
+	externalFunction := TFExternalFunction
 		name: spec functionName
-		module: self libraryName
-		callType: self callType
-		returnType: return
-		argumentTypes: arguments.
+		moduleName: self libraryName
+		parameterTypes: arguments
+		returnType: return.
 	
 	functionResolutionStrategies
 		detect: [ :each | each isApplicableFor: self requestor ]
@@ -59,58 +62,58 @@ ObjCCalloutMethodBuilder >> createFFICalloutLiteralFromSpec: spec [
 ]
 
 { #category : #private }
-ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: spec [
-	| numArgs |
+ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: functionSpec [
+	| properties |
 
-	numArgs := spec arguments size.
-	"Builds a method call"
+	"Copy the properties of the old method"
+	sender methodProperties ifNotNil: [ 
+		properties := sender methodProperties copy.
+		properties method: nil.
+		builder properties: properties ].
+
 	builder
-		numArgs: numArgs;
-		addTemps: ((1 to: numArgs) collect: [ :index | 'arg', index asString ]), #(result).
-	
+		numArgs: self argumentNames size;
+		addTemps: (self argumentNames copyWith: #result).
+
+	TFCalloutAPI isTracing ifTrue: [ 
+		TFCalloutAPI trace: sender. 
+		builder 
+			pushLiteral: TFCalloutAPI;
+			pushLiteral: sender;
+			send: #trace: ].
+
+	"Obtain the library to use"
+	builder 
+		pushReceiver;
+		send: #ffiLibrary;
+		send: #uniqueInstance.
+		
+	"Obtain the runner to use."
+	builder send: #runner.
+
+	"Builds a method call"
 	"save ffi call as literal"
-	builder pushLiteral: (self createFFICalloutLiteralFromSpec: spec).
+	builder pushLiteral: (self createFFICalloutLiteralFromSpec: functionSpec).
 	"iterate arguments in order (in the function) to create the function call"
-	"if we have a structure, create and push it"
-	spec returnType isTypeStructure 
-		ifTrue: [ 
-			builder 
-				pushLiteralVariable: spec returnType objectClass binding;
-				"send: #externalNew;
-				send: #autoRelease;"
-				send: #new;
-				storeTemp: #result ].
-	spec arguments withIndexDo: [ :each :index | 
-		each 
-			loader: (FFIMethodArgument new argName: 'arg', index asString);
-			emitArgument: builder 
-				context: nil
-				inCallout: self requestor ].
+	functionSpec arguments do: [ :each | each emitArgument: builder context: sender inCallout: self requestor ].
 	"create the array"
-	builder pushConsArray: (spec returnType isTypeStructure 
-		ifTrue: [ numArgs + 1 ]
-		ifFalse: [ numArgs ]).
+	builder pushConsArray: functionSpec arguments size.
 	"send call and store into result"
-	builder send: #invokeWithArguments:.
-	spec arguments
-		do: [ :each | each emitReturnArgument: builder context: nil ].
-
-	"Return result if this is a struct (it was passed as parameter)"
-	spec returnType isTypeStructure ifTrue: [ 
-		^ builder 
-			pushTemp: #result;
-			returnTop ].
-
+	builder send: #invokeFunction:withArguments:.
+	
+	functionSpec arguments do: [ :each | each emitReturnArgument: builder context: sender ].
 	"convert in case return type needs it. And return reseult"
-	^ spec returnType
+	^ functionSpec returnType
 		emitReturn: builder
 		resultTempVar: #result
 		context: sender
+		inCallout: self requestor
 ]
 
 { #category : #private }
 ObjCCalloutMethodBuilder >> generateMethodFromSpec: spec [
 	| ir |
+
 	ir := IRBuilder buildIR: [ :builder | 
 		self generateFFICallout: builder spec: spec ].
 	^ ir generate
