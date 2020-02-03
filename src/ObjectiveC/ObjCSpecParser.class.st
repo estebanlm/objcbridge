@@ -125,26 +125,30 @@ ObjCSpecParser >> newFunctionParser [
 
 { #category : #'private parsing' }
 ObjCSpecParser >> nextStructure: aStream [
-	^ FFICallout new 
+
+	^ ObjCTypeDeclaration newType: (FFICallout new 
 		requestor: self;
-		resolveType: (aStream upTo: $=)
+		resolveType: (aStream upTo: $=))
 ]
 
 { #category : #'private parsing' }
 ObjCSpecParser >> nextType: aStream [
 	| ch |
+
 	[ TypeQualifiers includes: (ch := aStream next) ] whileTrue.
  	(self isStructure: ch) ifTrue: [ ^ self nextStructure: aStream ].
 	((self isObject: ch) and: [ aStream peek = $? ]) ifTrue: [ 
 		aStream skip: 1.
 		ch := $? ].
-	^ FFICallout new 
+	
+	^ ObjCTypeDeclaration newType: (FFICallout new 
 		requestor: ObjCLibrary;
-		resolveType: (MethodTypeMap at: ch)
+		resolveType: (MethodTypeMap at: ch))
 ]
 
 { #category : #parsing }
 ObjCSpecParser >> parseMethod: anObjCMethod [
+
 	^ FFIFunctionSpec new
 		returnType: (self parseType: anObjCMethod returnType);
 		arguments: (anObjCMethod argumentTypes 

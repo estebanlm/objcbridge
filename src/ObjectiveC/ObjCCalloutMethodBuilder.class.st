@@ -4,14 +4,18 @@ I'm a callout builder for Objective-C methods.
 Class {
 	#name : #ObjCCalloutMethodBuilder,
 	#superclass : #FFICalloutMethodBuilder,
+	#instVars : [
+		'message'
+	],
 	#category : #'ObjectiveC-Builder'
 }
 
 { #category : #'builder api' }
-ObjCCalloutMethodBuilder class >> buildMethod: objCMethod sender: aContext [
+ObjCCalloutMethodBuilder class >> buildMethod: objCMethod message: aMessage sender: aContext [
 
 	^ self new 
 		sender: aContext;
+		message: aMessage;
 		requestor: (FFICallout new
 			requestor: ObjCLibrary;
 			yourself);
@@ -20,21 +24,42 @@ ObjCCalloutMethodBuilder class >> buildMethod: objCMethod sender: aContext [
 
 { #category : #private }
 ObjCCalloutMethodBuilder >> adaptSpecToReturnType: aSpec [
+
 	aSpec functionName: (self msgSendFunctionForReturnType: aSpec returnType)
+]
+
+{ #category : #accessing }
+ObjCCalloutMethodBuilder >> argumentNames [
+
+	^ self message arguments 
+		withIndexCollect: [ :each :index | 'arg', index printString ]
 ]
 
 { #category : #'builder api' }
 ObjCCalloutMethodBuilder >> buildMethod: objCMethod [
-	| spec |
+	| spec argumentNames |
 	
 	spec := ObjCSpecParser new parseMethod: objCMethod.
 	spec resolveUsing: self requestor.
+	"loader for self"
+	spec arguments first loader: (FFISelfArgument new).
+	"loader for SEL"
+	spec arguments second loader: (FFILiteralArgument value: self message selector asObjCSelector).
+	"loader for arguments"
+	argumentNames := self argumentNames.
+	(spec arguments allButFirst: 2) withIndexDo: [ :each :index |
+		each loader: (FFIMethodArgument new
+			argName: (argumentNames at: index);
+			index: index;
+			yourself) ].
+		  
 	self adaptSpecToReturnType: spec.
 	^ self generateMethodFromSpec: spec
 ]
 
 { #category : #accessing }
 ObjCCalloutMethodBuilder >> callType [
+
 	^ 0 "cdecl"
 ]
 
@@ -42,11 +67,11 @@ ObjCCalloutMethodBuilder >> callType [
 ObjCCalloutMethodBuilder >> createFFICalloutLiteralFromSpec: spec [
 	| externalFunction return arguments |
 	
-	return := spec returnType externalTypeWithArity.
+	return := spec returnType tfExternalTypeWithArity.
 	arguments := spec arguments collect: [ :each | each tfExternalTypeWithArity ].
 	spec returnType isTypeStructure ifTrue: [ 
 		arguments := arguments copyWithFirst: spec returnType tfExternalType asPointerType.
-		return := FFIVoid externalType ].
+		return := FFIVoid new tfExternalType ].
 	
 	externalFunction := TFExternalFunction
 		name: spec functionName
@@ -121,11 +146,25 @@ ObjCCalloutMethodBuilder >> generateMethodFromSpec: spec [
 
 { #category : #accessing }
 ObjCCalloutMethodBuilder >> libraryName [
+
 	^ ObjCLibrary uniqueInstance libraryName
+]
+
+{ #category : #accessing }
+ObjCCalloutMethodBuilder >> message [
+
+	^ message
+]
+
+{ #category : #accessing }
+ObjCCalloutMethodBuilder >> message: aMessage [
+
+	message := aMessage
 ]
 
 { #category : #private }
 ObjCCalloutMethodBuilder >> msgSendFunctionForReturnType: aType [
+
 	aType isTypeStructure ifTrue: [ ^ 'objc_msgSend_stret' ].
 	aType isTypeFloat ifTrue: [ ^ 'objc_msgSend_fpret' ].
 	^ 'objc_msgSend'

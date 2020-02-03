@@ -15,10 +15,9 @@ ObjCProxyCallback >> parseSignature: signature [
 { #category : #evaluation }
 ObjCProxyCallback >> valueWithArguments: args [
 
-	^ [ block 
-			value: args first "self"
-			value: args second "SEL"
-			value: (args allButFirst: 2) "arguments" ]
+	^ [ 
+			"skip self, SEL and keep just the arguments"
+			block value: (args allButFirst: 2) ]
 		on: Error 
 		fork: [ :e | e debug ]
 		return: [ self returnOnError ]

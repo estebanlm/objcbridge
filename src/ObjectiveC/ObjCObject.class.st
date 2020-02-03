@@ -46,7 +46,7 @@ ObjCObject >> doesNotUnderstand: aMessage [
 
 	shadowMethod := self installedMethodForMessage: aMessage sender: thisContext sender.
 	shadowMethod ifNil: [ ^ super doesNotUnderstand: aMessage ].
-	arguments := ({ self. aMessage selector asObjCSelector }, (aMessage arguments collect: #adaptToObjC)).
+	arguments := aMessage arguments collect: [ :each | each adaptToObjC ].
 	^ shadowMethod 
 		valueWithReceiver: self
 		arguments: arguments
@@ -82,15 +82,16 @@ ObjCObject >> installedMethodForMessage: aMessage sender: aContext [
 	objCMethod := self objCMethodForSelector: aMessage selector.
 	(objCMethod isNil or: [ objCMethod isNull ]) 
 		ifTrue: [ ^ nil ].
+		
 	^ self 
 		installMethodAt: aMessage selector
-		implementation: ((ObjCCalloutMethodBuilder buildMethod: objCMethod sender: aContext)
-				selector: ((aMessage numArgs = 0
-					ifTrue: [ aMessage selector, #_rec:_sel: ]
-					ifFalse: [ #_rec:_sel:, aMessage selector ])
-					asSymbol);
-				methodClass: self class;
-				yourself)
+		implementation: ((ObjCCalloutMethodBuilder 
+				buildMethod: objCMethod 
+				message: aMessage 
+				sender: aContext)
+			selector: aMessage selector;
+			methodClass: self class;
+			yourself)
 ]
 
 { #category : #accessing }
