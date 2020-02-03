@@ -9,9 +9,6 @@ Class {
 	#superclass : #Object,
 	#traits : 'TObjCProxyClass',
 	#classTraits : 'TObjCProxyClass classTrait',
-	#instVars : [
-		'proxy'
-	],
 	#category : #'ObjectiveC-Proxy'
 }
 
@@ -31,14 +28,4 @@ ObjCProxyObject >> initialize [
 { #category : #initialization }
 ObjCProxyObject >> initializeProxy [
 	
-]
-
-{ #category : #accessing }
-ObjCProxyObject >> proxy [
-	^ proxy
-]
-
-{ #category : #accessing }
-ObjCProxyObject >> proxy: anObject [
-	proxy := anObject.
 ]

@@ -1,3 +1,6 @@
+"
+I define a class that will be installed in ObjC and will work as a proxy between ObjC and Pharo
+"
 Class {
 	#name : #ObjCProxyClass,
 	#superclass : #Object,
@@ -95,7 +98,7 @@ ObjCProxyClass >> class_addMethodClass: cls selector: name implementation: imp s
 { #category : #private }
 ObjCProxyClass >> createCallbackFor: aSelector signature: aString [
 
-	^ ObjCProxyCallback 
+	^ ObjCProxyCallback
 		signature: aString
 		block: [ :receiver :ignoredSelector :args | 
 			self 

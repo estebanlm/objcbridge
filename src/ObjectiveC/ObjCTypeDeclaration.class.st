@@ -1,3 +1,7 @@
+"
+I'm a type declaration for ObjC functions. 
+I'm needed because when matching ObjC functions I already have all needed data, so I can skip the resolution of type.
+"
 Class {
 	#name : #ObjCTypeDeclaration,
 	#superclass : #FFITypeDeclaration,
