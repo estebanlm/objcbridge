@@ -131,8 +131,9 @@ ObjCProxyClass >> createClassNamed: className superclass: superclassName  into: 
 ]
 
 { #category : #private }
-ObjCProxyClass >> findInstance: addressNumber [
-	^ instances detect: [ :each | (each instVarNamed: 'proxy') getHandle asInteger = addressNumber ].
+ObjCProxyClass >> findInstance: address [
+
+	^ instances detect: [ :each | each proxy getHandle = address ].
 ]
 
 { #category : #private }
@@ -273,7 +274,7 @@ ObjCProxyClass >> receiverClass [
 ObjCProxyClass >> sendTo: receiver selector: aSelector withArguments: args [
 	| proxyReceiver |
 	
-	proxyReceiver := self findInstance: receiver asInteger.
+	proxyReceiver := self findInstance: receiver.
 	^ [ proxyReceiver
 		perform: aSelector 
 		withArguments: args ]
