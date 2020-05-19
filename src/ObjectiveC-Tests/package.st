@@ -1,1 +1,1 @@
-Package { #name : #ObjectiveC-Tests }
+Package { #name : #'ObjectiveC-Tests' }

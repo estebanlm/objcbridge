@@ -1,5 +1,5 @@
 "
-I represent an Objective-C method definition.
+I represent the Objective-C Runtime's Method data type. See documention at https://developer.apple.com/documentation/objectivec/method?language=objc
 "
 Class {
 	#name : #ObjCMethod,

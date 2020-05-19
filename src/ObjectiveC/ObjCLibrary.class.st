@@ -17,13 +17,18 @@ Class {
 { #category : #private }
 ObjCLibrary class >> createObjCTypes [
 	^ Dictionary newFromPairs: #(
-		Method 	ObjCMethod
-		Class 		ObjCClass
-		SEL 		ObjCSelector
-		id 			ObjCObject
-		IMP 		ObjCProxyCallback
-		BOOL 		bool
-		CGFloat 	double "float in 32bits"
+		BOOL 					bool
+		CGFloat 				double "float in 32bits"
+		Class 					ObjCClass
+		id 						ObjCObject
+		Ivar 					ObjCInstanceVariable
+		IMP 					ObjCProxyCallback
+		Method 				ObjCMethod
+		objc_property_t 	ObjCProperty
+		Protocol 				ObjCProtocol
+		ptrdiff_t 			long "typedef for __darwin_ptrdiff_t, a long on 64-bit (see _types.h)"
+		SEL 					ObjCSelector
+		uint8_t 				uchar "Drill down from https://developer.apple.com/documentation/kernel/uint8_t?language=objc"
 	)
 ]
 

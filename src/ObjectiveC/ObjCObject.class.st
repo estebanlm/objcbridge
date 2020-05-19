@@ -30,11 +30,6 @@ ObjCObject class >> nil [
 	^ self null
 ]
 
-{ #category : #private }
-ObjCObject >> class: aClass getInstanceMethod: aName [
-	^ self ffiCall: #(Method class_getInstanceMethod(Class aClass, SEL aName))
-]
-
 { #category : #accessing }
 ObjCObject >> descriptionString [ 
 	^ self description UTF8String
@@ -50,6 +45,24 @@ ObjCObject >> doesNotUnderstand: aMessage [
 	^ shadowMethod 
 		valueWithReceiver: self
 		arguments: arguments
+]
+
+{ #category : #'objective-c run-time' }
+ObjCObject >> getClass [
+	"https://developer.apple.com/documentation/objectivec/1418629-object_getclass?language=objc"
+	^ self ffiCall: #(Class object_getClass(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCObject >> getClassName [
+	"https://developer.apple.com/documentation/objectivec/1418547-object_getclassname?language=objc"
+	^ self ffiCall: #(const char * object_getClassName(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCObject >> getInstanceVariable [
+	"https://developer.apple.com/documentation/objectivec/1441499-object_getinstancevariable?language=objc"
+	^ self ffiCall: #(Ivar object_getInstanceVariable(self, const char *name, void **outValue))
 ]
 
 { #category : #private }
@@ -111,9 +124,7 @@ ObjCObject >> isa [
 
 { #category : #private }
 ObjCObject >> objCMethodForSelector: aSelector [
-	^ self 
-		class: self isa
-		getInstanceMethod: aSelector asObjCSelector
+	^ self isa getInstanceMethod: aSelector asObjCSelector
 ]
 
 { #category : #private }
