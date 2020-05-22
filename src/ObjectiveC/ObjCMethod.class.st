@@ -24,13 +24,13 @@ ObjCMethod >> argumentTypes [
 ]
 
 { #category : #private }
-ObjCMethod >> method_getName [
+ObjCMethod >> getName [
 	^ self ffiCall: #(SEL method_getName(self))
 ]
 
 { #category : #accessing }
 ObjCMethod >> name [
-	^ self method_getName name
+	^ self getName name
 ]
 
 { #category : #accessing }

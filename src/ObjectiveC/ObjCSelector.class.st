@@ -21,12 +21,17 @@ ObjCSelector class >> sel_registerName: str [
 	^ self ffiCall: #(SEL sel_registerName(const char *str))
 ]
 
-{ #category : #accessing }
-ObjCSelector >> name [
-	^ self ffiCall: #(char *sel_getName(self))
+{ #category : #private }
+ObjCSelector >> asNSString [
+	^ self ffiCall: #(NSString *NSStringFromSelector(SEL self))
 ]
 
 { #category : #private }
-ObjCSelector >> sel_getName [
+ObjCSelector >> getName [
+	^ self ffiCall: #(const char *sel_getName(SEL self))
+]
+
+{ #category : #accessing }
+ObjCSelector >> name [
 	^ self ffiCall: #(char *sel_getName(self))
 ]

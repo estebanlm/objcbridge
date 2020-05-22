@@ -104,30 +104,59 @@ ObjCClass >> conformsToProtocol: protocol [
 ]
 
 { #category : #'objective-c run-time' }
+ObjCClass >> convertPointerArrayReturnedBy: selector toInstances: aClass [
+	| outCount result pointers |
+	outCount := FFIUInt32 newBuffer.
+	result := self perform: selector with: outCount.
+	result getHandle isNull ifTrue: [ ^ Array new ].
+	pointers := result getHandle readArrayOf: FFIOop new until: [ :e | e isNull ].
+	result getHandle free.
+	^ pointers collect: [ :e | aClass fromHandle: e ].
+]
+
+{ #category : #'objective-c run-time' }
 ObjCClass >> copyIvarList [
+	^ self convertPointerArrayReturnedBy: #copyIvarList: toInstances: ObjCInstanceVariable
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyIvarList: outCount [
 	"https://developer.apple.com/documentation/objectivec/1418910-class_copyivarlist?language=objc"
-	self flag: 'How to pass int address?'.
-	^ self ffiCall: #(Ivar* class_copyIvarList(self, unsigned int *outCount))
+	^ self ffiCall: #(Ivar* class_copyIvarList(Class self, uint *outCount))
 ]
 
 { #category : #'objective-c run-time' }
 ObjCClass >> copyMethodList [
+	^ self convertPointerArrayReturnedBy: #copyMethodList: toInstances: ObjCMethod
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyMethodList: outCount [
 	"https://developer.apple.com/documentation/objectivec/1418490-class_copymethodlist?language=objc"
-	^ self ffiCall: #(Method * class_copyMethodList(self, unsigned int *outCount))
+	^ self ffiCall: #(Method * class_copyMethodList(Class self, uint *outCount))
 ]
 
 { #category : #'objective-c run-time' }
 ObjCClass >> copyPropertyList [
+	^ self convertPointerArrayReturnedBy: #copyPropertyList: toInstances: ObjCProperty
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyPropertyList: outCount [
 	"https://developer.apple.com/documentation/objectivec/1418553-class_copypropertylist?language=objc"
 
-	^ self ffiCall: #(objc_property_t * class_copyPropertyList(Class cls, unsigned int *outCount))
+	^ self ffiCall: #(objc_property_t * class_copyPropertyList(Class self, uint *outCount))
 ]
 
 { #category : #'objective-c run-time' }
 ObjCClass >> copyProtocolList [
+	^ self convertPointerArrayReturnedBy: #copyProtocolList: toInstances: ObjCProtocol
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyProtocolList: outCount [
 	"https://developer.apple.com/documentation/objectivec/1418883-class_copyprotocollist?language=objc"
-	self flag: 'How to pass int address?'.
-	^ self ffiCall: #(Protocol ** class_copyProtocolList(self, unsigned int *outCount))
+	^ self ffiCall: #(Protocol ** class_copyProtocolList(Class self, uint *outCount))
 ]
 
 { #category : #'objective-c run-time' }
