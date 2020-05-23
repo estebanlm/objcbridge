@@ -4,10 +4,15 @@ I represent the Objective-C Runtime's Property data type. See documention at htt
 Class {
 	#name : #ObjCProperty,
 	#superclass : #FFIExternalObject,
-	#traits : 'TObjCLibrary',
-	#classTraits : 'TObjCLibrary classTrait',
+	#traits : 'TObjCLibrary + TObjCInspectable',
+	#classTraits : 'TObjCLibrary classTrait + TObjCInspectable classTrait',
 	#category : #'ObjectiveC-Core'
 }
+
+{ #category : #displaying }
+ObjCProperty >> displayString [
+	^ self getName
+]
 
 { #category : #accessing }
 ObjCProperty >> getName [

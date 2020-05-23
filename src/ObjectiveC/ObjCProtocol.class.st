@@ -3,9 +3,9 @@ I represent the Objective-C Runtime's Protocol class. See documention at https:/
 "
 Class {
 	#name : #ObjCProtocol,
-	#superclass : #FFIExternalObject,
-	#traits : 'TObjCLibrary',
-	#classTraits : 'TObjCLibrary classTrait',
+	#superclass : #FFIOpaqueObject,
+	#traits : 'TObjCLibrary + TObjCInspectable',
+	#classTraits : 'TObjCLibrary classTrait + TObjCInspectable classTrait',
 	#category : #'ObjectiveC-Core'
 }
 
@@ -13,6 +13,11 @@ Class {
 ObjCProtocol class >> getProtocol: aName [
 	"https://developer.apple.com/documentation/objectivec/1418870-objc_getprotocol?language=objc"
 	^ self ffiCall: #(Protocol * objc_getProtocol(const char *aName))
+]
+
+{ #category : #displaying }
+ObjCProtocol >> displayString [
+	^ self getName
 ]
 
 { #category : #accessing }

@@ -17,29 +17,28 @@ ObjCClassTest >> test_conformsToProtocol [
 { #category : #test }
 ObjCClassTest >> test_copyIvarList [
 
-	| class |
+	| class hasExpectedItem |
 	class := #NSObject inObjC.
-	class copyIvarList.
-	"self assert:  equals: ."
+	hasExpectedItem := class copyIvarList anySatisfy: [ :e | e getName = 'isa' ].
+	self assert: hasExpectedItem
 ]
 
 { #category : #test }
 ObjCClassTest >> test_copyMethodList [
 
-	| class |
+	| class hasExpectedItem |
 	class := #NSObject inObjC.
-	self flag: 'How to pass int address?'.
-	class copyMethodList.
-	"self assert:  equals: ."
+	hasExpectedItem := class copyMethodList anySatisfy: [ :e | e getName getName = 'isEqualTo:' ].
+	self assert: hasExpectedItem
 ]
 
 { #category : #test }
 ObjCClassTest >> test_copyPropertyList [
 
-	| class |
+	| class hasExpectedItem |
 	class := #NSObject inObjC.
-	class copyProtocolList.
-	"self assert:  equals: ."
+	hasExpectedItem := class copyProtocolList anySatisfy: [ :e | e getName = 'NSObject' ].
+	self assert: hasExpectedItem
 ]
 
 { #category : #test }

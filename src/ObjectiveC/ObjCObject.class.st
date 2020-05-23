@@ -4,8 +4,8 @@ I represent an Objective-C instance.
 Class {
 	#name : #ObjCObject,
 	#superclass : #FFIExternalObject,
-	#traits : 'TObjCLibrary',
-	#classTraits : 'TObjCLibrary classTrait',
+	#traits : 'TObjCLibrary + TObjCInspectable',
+	#classTraits : 'TObjCLibrary classTrait + TObjCInspectable classTrait',
 	#instVars : [
 		'isa'
 	],
@@ -56,13 +56,51 @@ ObjCObject >> getClass [
 { #category : #'objective-c run-time' }
 ObjCObject >> getClassName [
 	"https://developer.apple.com/documentation/objectivec/1418547-object_getclassname?language=objc"
-	^ self ffiCall: #(const char * object_getClassName(self))
+	^ self ffiCall: #(const char * object_getClassName(id self))
 ]
 
 { #category : #'objective-c run-time' }
 ObjCObject >> getInstanceVariable [
 	"https://developer.apple.com/documentation/objectivec/1441499-object_getinstancevariable?language=objc"
 	^ self ffiCall: #(Ivar object_getInstanceVariable(self, const char *name, void **outValue))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCObject >> getInstanceVariable: aString [
+	"https://developer.apple.com/documentation/objectivec/1441499-object_getinstancevariable?language=objc"
+	| outValue |
+	outValue := FFIOop newBuffer.
+	^ { self getInstanceVariable: aString value: outValue. outValue }
+]
+
+{ #category : #'objective-c run-time' }
+ObjCObject >> getInstanceVariable: name value: outValue [
+	"https://developer.apple.com/documentation/objectivec/1441499-object_getinstancevariable?language=objc"
+	^ self ffiCall: #(Ivar object_getInstanceVariable(id self, const char *name, void **outValue))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCObject >> getInstanceVariableValue: aString [
+	"https://developer.apple.com/documentation/objectivec/1441499-object_getinstancevariable?language=objc"
+	| outValue |
+	outValue := ExternalAddress new.
+	^ { self getInstanceVariable: aString value: outValue. outValue }
+]
+
+{ #category : #inspecting }
+ObjCObject >> gtInspectorRuntimeFields [
+	^ { 
+		'Class' -> self getClass.
+		'Class Name' -> self getClassName. }
+]
+
+{ #category : #inspecting }
+ObjCObject >> gtInspectorRuntimeIn: composite [
+	<gtInspectorPresentationOrder: 10>
+	
+	self 
+		gtInspectorObjCRuntimeFields: self gtInspectorRuntimeFields
+		in: composite
 ]
 
 { #category : #private }

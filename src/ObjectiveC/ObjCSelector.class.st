@@ -4,8 +4,8 @@ I represent an Objective-C selector.
 Class {
 	#name : #ObjCSelector,
 	#superclass : #FFIExternalObject,
-	#traits : 'TObjCLibrary',
-	#classTraits : 'TObjCLibrary classTrait',
+	#traits : 'TObjCLibrary + TObjCInspectable',
+	#classTraits : 'TObjCLibrary classTrait + TObjCInspectable classTrait',
 	#category : #'ObjectiveC-Core'
 }
 
@@ -26,12 +26,17 @@ ObjCSelector >> asNSString [
 	^ self ffiCall: #(NSString *NSStringFromSelector(SEL self))
 ]
 
-{ #category : #private }
+{ #category : #displaying }
+ObjCSelector >> displayString [
+	^ self name
+]
+
+{ #category : #'objective-c run-time' }
 ObjCSelector >> getName [
 	^ self ffiCall: #(const char *sel_getName(SEL self))
 ]
 
 { #category : #accessing }
 ObjCSelector >> name [
-	^ self ffiCall: #(char *sel_getName(self))
+	^ self getName
 ]
