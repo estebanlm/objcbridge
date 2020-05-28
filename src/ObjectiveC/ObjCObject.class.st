@@ -98,6 +98,7 @@ ObjCObject >> gtInspectorRuntimeFields [
 ObjCObject >> gtInspectorRuntimeIn: composite [
 	<gtInspectorPresentationOrder: 10>
 	
+	self getHandle isNull ifTrue: [ ^ self ].
 	self 
 		gtInspectorObjCRuntimeFields: self gtInspectorRuntimeFields
 		in: composite
