@@ -170,6 +170,18 @@ ObjCObject >> objCPerform: aSEL [
 	^ self ffiCall: #(id objc_msgSend(self, SEL aSEL))
 ]
 
+{ #category : #'message performing' }
+ObjCObject >> objCSend: aMessage [
+	"Force a message to be sent on the Obj-C side. This is useful when there is a message with the same selector on the Pharo side (e.g. #class), which would otherwise intercept it"
+	^ self doesNotUnderstand: aMessage
+]
+
+{ #category : #'message performing' }
+ObjCObject >> performObjC: selector withArguments: argArray [ 
+	"See objCSend: comment"
+	^ self objCSend: (Message selector: selector arguments: argArray)
+]
+
 { #category : #accessing }
 ObjCObject >> release [
 	self objCPerform: #release asObjCSelector

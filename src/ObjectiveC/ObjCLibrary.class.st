@@ -159,6 +159,11 @@ ObjCLibrary >> gtInspectorRuntimeIn: composite [
 		in: composite
 ]
 
+{ #category : #'objective-c run-time' }
+ObjCLibrary >> images [
+	^ self copyImageNames collect: [ :e | ObjCImage named: e ]
+]
+
 { #category : #'accessing platform' }
 ObjCLibrary >> macLibraryName [
 	^ 'libobjc.dylib'
