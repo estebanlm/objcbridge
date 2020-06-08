@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'parser'
 	],
-	#category : #ObjectiveC-Tests
+	#category : #'ObjectiveC-Tests'
 }
 
 { #category : #accessing }

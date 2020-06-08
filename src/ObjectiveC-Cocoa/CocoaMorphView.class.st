@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'morph'
 	],
-	#category : #ObjectiveC-Cocoa
+	#category : #'ObjectiveC-Cocoa'
 }
 
 { #category : #private }

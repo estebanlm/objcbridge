@@ -1,1 +1,1 @@
-Package { #name : #ObjectiveC-Cocoa }
+Package { #name : #'ObjectiveC-Cocoa' }

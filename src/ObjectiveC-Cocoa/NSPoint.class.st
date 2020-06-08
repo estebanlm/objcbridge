@@ -5,7 +5,7 @@ Class {
 		'OFFSET_X',
 		'OFFSET_Y'
 	],
-	#category : #ObjectiveC-Cocoa-Structure
+	#category : #'ObjectiveC-Cocoa-Structure'
 }
 
 { #category : #'field definition' }

@@ -13,6 +13,13 @@ String >> adaptToObjC [
 ]
 
 { #category : #'*ObjectiveC' }
+String >> asObjCFourCharCode [
+	"Adapted from https://stackoverflow.com/a/31321444"
+
+	^ self inject: 0 into: [ :sum :e | (sum << 8) + e asciiValue ]
+]
+
+{ #category : #'*ObjectiveC' }
 String >> inObjC [
 	^ ObjCClass lookup: self asString
 ]

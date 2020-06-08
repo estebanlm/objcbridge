@@ -1,10 +1,7 @@
 Class {
 	#name : #MacOSXWindowDelegate,
-	#superclass : #Object,
-	#instVars : [
-		'proxy'
-	],
-	#category : #ObjectiveC-Cocoa-Examples
+	#superclass : #ObjCProxyObject,
+	#category : #'ObjectiveC-Cocoa-Examples'
 }
 
 { #category : #example }
@@ -42,12 +39,8 @@ MacOSXWindowDelegate class >> example [
 	{window. delegate} inspect. "Just to prevent GC"
 	window center.
 	window makeKeyAndOrderFront: ObjCObject null.
+	2 seconds asDelay wait.
 	pool release
-]
-
-{ #category : #accessing }
-MacOSXWindowDelegate >> proxy [
-	^ proxy
 ]
 
 { #category : #'event handling' }

@@ -8,7 +8,7 @@ Class {
 		'NSSquareStatusItemLength',
 		'NSVariableStatusItemLength'
 	],
-	#category : #ObjectiveC-Cocoa
+	#category : #'ObjectiveC-Cocoa'
 }
 
 { #category : #'class initialization' }

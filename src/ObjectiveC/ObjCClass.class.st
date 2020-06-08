@@ -45,6 +45,32 @@ ObjCClass class >> lookup: globalOrClassName inLibrary: libraryName [
 	^ self lookup: globalOrClassName
 ]
 
+{ #category : #'objective-c run-time' }
+ObjCClass class >> objc_getClassList [
+	"https://developer.apple.com/documentation/objectivec/1418579-objc_getclasslist?language=objc"
+	^ self ffiCall: #(int objc_getClassList(Class *buffer, int bufferCount))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> addIvar [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> addMethod [
+	self shouldBeImplemented 
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> addProperty [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> addProtocol [
+	self shouldBeImplemented.
+]
+
 { #category : #accessing }
 ObjCClass >> classMethodAt: aSelector [
 	^ classMethods 
@@ -71,9 +97,163 @@ ObjCClass >> classMethodAt: aSelector put: aMethod [
 	^ classMethods at: aSelector put: aMethod
 ]
 
+{ #category : #'objective-c run-time' }
+ObjCClass >> conformsToProtocol: protocol [
+	"https://developer.apple.com/documentation/objectivec/1418685-class_conformstoprotocol?language=objc"
+	^ self ffiCall: #(BOOL class_conformsToProtocol(Class self, Protocol *protocol))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyIvarList [
+	"https://developer.apple.com/documentation/objectivec/1418910-class_copyivarlist?language=objc"
+	^ self returnArrayFrom: #copyIvarList: AsInstancesOf: ObjCInstanceVariable
+]
+
 { #category : #private }
-ObjCClass >> class_getClassMethod: aName [
-	^ self ffiCall: #(Method class_getClassMethod(self, SEL aName))
+ObjCClass >> copyIvarList: outCount [
+	"https://developer.apple.com/documentation/objectivec/1418910-class_copyivarlist?language=objc"
+	^ self ffiCall: #(Ivar* class_copyIvarList(Class self, uint *outCount))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyMethodList [
+	"https://developer.apple.com/documentation/objectivec/1418490-class_copymethodlist?language=objc"
+	^ self returnArrayFrom: #copyMethodList: AsInstancesOf: ObjCMethod
+]
+
+{ #category : #private }
+ObjCClass >> copyMethodList: outCount [
+	"https://developer.apple.com/documentation/objectivec/1418490-class_copymethodlist?language=objc"
+	^ self ffiCall: #(Method * class_copyMethodList(Class self, uint *outCount))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyPropertyList [
+	"https://developer.apple.com/documentation/objectivec/1418553-class_copypropertylist?language=objc"
+	^ self returnArrayFrom: #copyPropertyList: AsInstancesOf: ObjCProperty
+]
+
+{ #category : #private }
+ObjCClass >> copyPropertyList: outCount [
+	"https://developer.apple.com/documentation/objectivec/1418553-class_copypropertylist?language=objc"
+
+	^ self ffiCall: #(objc_property_t * class_copyPropertyList(Class self, uint *outCount))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> copyProtocolList [
+	"https://developer.apple.com/documentation/objectivec/1418883-class_copyprotocollist?language=objc"
+	^ self returnArrayFrom: #copyProtocolList: AsInstancesOf: ObjCProtocol
+]
+
+{ #category : #private }
+ObjCClass >> copyProtocolList: outCount [
+	"https://developer.apple.com/documentation/objectivec/1418883-class_copyprotocollist?language=objc"
+	^ self ffiCall: #(Protocol ** class_copyProtocolList(Class self, uint *outCount))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getClassMethod: name [
+	"https://developer.apple.com/documentation/objectivec/1418887-class_getclassmethod?language=objc"
+	^ self ffiCall: #(Method class_getClassMethod(Class self, SEL name))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getClassVariable: name [
+	"https://developer.apple.com/documentation/objectivec/1418487-class_getclassvariable?language=objc"
+
+	^ self ffiCall: #(#Ivar #class_getClassVariable #(#self #, #const #char #* #name))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getFutureClass [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getImageName [
+	"https://developer.apple.com/documentation/objectivec/1418539-class_getimagename?language=objc"
+	^ self ffiCall: #(const char * class_getImageName(Class self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getInstanceMethod: aName [
+	"https://developer.apple.com/documentation/objectivec/1418530-class_getinstancemethod?language=objc"
+	^ self ffiCall: #(Method class_getInstanceMethod(Class self, SEL aName))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getInstanceSize [
+	"https://developer.apple.com/documentation/objectivec/1418907-class_getinstancesize?language=objc"
+	^ self ffiCall: #(size_t class_getInstanceSize(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getInstanceVariable: name [
+	"https://developer.apple.com/documentation/objectivec/1418643-class_getinstancevariable?language=objc"
+	^ self ffiCall: #(Ivar class_getInstanceVariable(self, const char *name))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getIvarLayout [
+	"https://developer.apple.com/documentation/objectivec/1418918-class_getivarlayout?language=objc"
+	^ self ffiCall: #(uint8_t * class_getIvarLayout(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getMethodImplementation: name [
+	"https://developer.apple.com/documentation/objectivec/1418811-class_getmethodimplementation?language=objc"
+	self flag: 'How does this differ from class_getMethodImplementation_stret?'.
+	^ self ffiCall: #(IMP class_getMethodImplementation(self, SEL name))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getName [
+	"https://developer.apple.com/documentation/objectivec/1418635-class_getname?language=objc"
+	^ self ffiCall: #(char * class_getName(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getProperty: name [
+	"Seems to walk up the inheritance chain and return props of superclasses, too
+	https://developer.apple.com/documentation/objectivec/1418597-class_getproperty?language=objc"
+	^ self ffiCall: #(objc_property_t class_getProperty(self, const char *name))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getSuperclass [
+	"You should usually use NSObject‘s superclass method instead of this function per documentation: https://developer.apple.com/documentation/objectivec/1418498-class_getsuperclass?language=objc"
+	^ self ffiCall: #(Class class_getSuperclass(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getVersion [
+	"https://developer.apple.com/documentation/objectivec/1418537-class_getversion?language=objc"
+	^ self ffiCall: #(int class_getVersion(self))
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> getWeakIvarLayout [
+	"https://developer.apple.com/documentation/objectivec/1418918-class_getivarlayout?language=objc"
+	^ self ffiCall: #(const uint8_t * class_getWeakIvarLayout(self))
+]
+
+{ #category : #inspecting }
+ObjCClass >> gtInspectorRuntimeFields [
+
+	^ super gtInspectorRuntimeFields, { 
+			'Name' -> self getName.
+			'Inst Vars' -> (self copyIvarList sorted: [ :a :b | a getName < b getName ]).
+			'Messages' -> (self copyMethodList sorted: [ :a :b | a selector name < b selector name ]).
+			'Metaclass?' -> self isMetaClass.
+			'Properties' -> self copyPropertyList.
+			'Protocols' -> self copyProtocolList.
+			'Instance Size' -> self getInstanceSize.
+			'Inst Var Layout' -> self getIvarLayout.
+			'Superclass' -> self getSuperclass.
+			'Version' -> self getVersion.
+			'Weak Inst Var Layout' -> self getWeakIvarLayout.
+			'Image Name' -> self getImageName }
 ]
 
 { #category : #initialization }
@@ -100,6 +280,12 @@ ObjCClass >> installedMethodAt: aSelector [
 	^ self 
 		classMethodAt: aSelector 
 		ifAbsent: [ nil ]
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> isMetaClass [
+	"https://developer.apple.com/documentation/objectivec/1418627-class_ismetaclass?language=objc"
+	^ self ffiCall: #(BOOL class_isMetaClass(self))
 ]
 
 { #category : #accessing }
@@ -130,15 +316,65 @@ ObjCClass >> methodAt: aSelector put: aMethod [
 
 { #category : #accessing }
 ObjCClass >> name [
-	^ self ffiCall: #(char * class_getName(self))
+	^ self getName
 ]
 
 { #category : #private }
 ObjCClass >> objCMethodForSelector: aSelector [
-	^ self class_getClassMethod: aSelector asObjCSelector
+	^ self getClassMethod: aSelector asObjCSelector
 ]
 
 { #category : #printing }
 ObjCClass >> printOn: aStream [ 
 	aStream << 'ObjC:' << self name
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> replaceMethod [
+	self shouldBeImplemented 
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> replaceProperty [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> respondsToSelector: anObjCSelector [
+	"
+	anObjCSelector - can be obtained from aSymbol `aSymbol asObjCSelector`
+	
+	Documentation: https://developer.apple.com/documentation/objectivec/1418517-class_respondstoselector?language=objc"
+	^ self ffiCall: #(BOOL class_respondsToSelector(Class self, SEL anObjCSelector))
+]
+
+{ #category : #private }
+ObjCClass >> returnArrayFrom: selector AsInstancesOf: aClass [
+	| outCount result pointers |
+	outCount := FFIUInt32 newBuffer.
+	result := self perform: selector with: outCount.
+	result getHandle isNull ifTrue: [ ^ Array new ].
+	pointers := result getHandle readArrayOf: FFIOop new until: [ :e | e isNull ].
+	result getHandle free.
+	^ pointers collect: [ :e | aClass fromHandle: e ].
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> setFutureClass [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> setIvarLayout [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> setVersion [
+	self shouldBeImplemented.
+]
+
+{ #category : #'objective-c run-time' }
+ObjCClass >> setWeakIvarLayout [
+	self shouldBeImplemented 
 ]
