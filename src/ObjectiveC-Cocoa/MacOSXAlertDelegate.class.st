@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'proxy'
 	],
-	#category : #ObjectiveC-Cocoa-Examples
+	#category : #'ObjectiveC-Cocoa-Examples'
 }
 
 { #category : #example }

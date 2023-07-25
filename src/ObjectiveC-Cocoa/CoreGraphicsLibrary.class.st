@@ -1,7 +1,7 @@
 Class {
 	#name : #CoreGraphicsLibrary,
 	#superclass : #FFILibrary,
-	#category : #ObjectiveC-Cocoa
+	#category : #'ObjectiveC-Cocoa'
 }
 
 { #category : #'accessing platform' }

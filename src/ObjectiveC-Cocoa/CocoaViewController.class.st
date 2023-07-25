@@ -4,7 +4,7 @@ Class {
 	#pools : [
 		'CocoaConstants'
 	],
-	#category : #ObjectiveC-Cocoa
+	#category : #'ObjectiveC-Cocoa'
 }
 
 { #category : #private }
