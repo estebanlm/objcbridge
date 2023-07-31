@@ -22,5 +22,5 @@ ObjCFunction class >> signature: signature block: aBlock [
 { #category : #initialization }
 ObjCFunction >> initializeSignature: signature block: aBlock [
 	callback := FFICallback signature: signature block: aBlock.
-	self setHandle: (ExternalAddress fromAddress: callback thunk address)
+	self setHandle: callback thunk
 ]

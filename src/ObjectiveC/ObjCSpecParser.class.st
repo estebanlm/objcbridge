@@ -53,8 +53,8 @@ ObjCSpecParser class >> initializeMethodTypeMap [
 		at: ${ "_C_STRUCT_B" 	put: #FFIExternalStructure;
 		"at: $}" "_C_STRUCT_E""put: []."
 		"NB: this is an aggregated of mine, to handle annonymous functions"
-		at: $? 					put: #FFICallback;
-		at: $B						put: #FFIBool
+		at: $? 					put: #FFIExternalObject;
+		at: $B						put: #FFIBool 
 		.
 
 	ReversedMethodTypeMap := Dictionary new: 32.
