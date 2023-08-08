@@ -1,5 +1,5 @@
 Class {
-	#name : #CocoaNotificationCenter,
+	#name : #UNNotificationCenter,
 	#superclass : #Object,
 	#instVars : [
 		'delegate'
@@ -11,23 +11,29 @@ Class {
 }
 
 { #category : #examples }
-CocoaNotificationCenter class >> example [
+UNNotificationCenter class >> example [
 
 	<script: 'self example'>
 
-	CocoaNotificationCenter uniqueInstance
+	"To send notifications the application should be signed, for development we can use ad hoc signing with the command: 
+
+	codesign -dv -r- MyApp.app
+	
+	"
+
+	UNNotificationCenter uniqueInstance
 		showNotificationTitle: 'I am a notification'
 		body: 'with a nice body'
 ]
 
 { #category : #accessing }
-CocoaNotificationCenter class >> new [
+UNNotificationCenter class >> new [
 
 	^ self error: 'Use uniqueInstance instead'
 ]
 
 { #category : #accessing }
-CocoaNotificationCenter class >> uniqueInstance [
+UNNotificationCenter class >> uniqueInstance [
 
 	UniqueInstance ifNil: [ UniqueInstance := self basicNew initialize; yourself ].
 	^ UniqueInstance 
@@ -36,13 +42,13 @@ CocoaNotificationCenter class >> uniqueInstance [
 ]
 
 { #category : #private }
-CocoaNotificationCenter >> currentNotificationCenter [
+UNNotificationCenter >> currentNotificationCenter [
 
 	^ #UNUserNotificationCenter inObjC currentNotificationCenter
 ]
 
-{ #category : #'as yet unclassified' }
-CocoaNotificationCenter >> doShowNotificationTitle: aTitle body: aBody [
+{ #category : #private }
+UNNotificationCenter >> doShowNotificationTitle: aTitle body: aBody [
 
 	| notificationContent identifier request sem completionHandler errorDescription |
 	notificationContent := #UNMutableNotificationContent inObjC alloc
@@ -64,14 +70,9 @@ CocoaNotificationCenter >> doShowNotificationTitle: aTitle body: aBody [
 	completionHandler := ObjCBlock
 		                     signature: #( void #( ObjCObject error ) )
 		                     block: [ :error |
-			                     error isNull ifFalse: [
-				                     | errorObject |
-				                     errorObject := ObjCObject fromHandle: error.
-				                     errorDescription := error
-					                                         localizedDescription
-					                                         UTF8String asByteArray
-					                                         utf8Decoded ].
+			                     error isNull ifFalse: [ errorDescription := self extractErrorDescription: error].
 			                     sem signal ].
+		
 	self currentNotificationCenter
 		addNotificationRequest: request
 		withCompletionHandler: completionHandler.
@@ -82,16 +83,24 @@ CocoaNotificationCenter >> doShowNotificationTitle: aTitle body: aBody [
 ]
 
 { #category : #private }
-CocoaNotificationCenter >> ensureDelegate [
+UNNotificationCenter >> ensureDelegate [
 
 	self currentNotificationCenter delegate isNull ifFalse: [ ^ self ].
 
-	delegate := ObjCProxyClass newFor: CocoaNotificationCenterDelegate new.
+	delegate := ObjCProxyClass newFor: UNNotificationCenterDelegate new.
 	self currentNotificationCenter setDelegate: delegate
 ]
 
+{ #category : #private }
+UNNotificationCenter >> extractErrorDescription: error [
+
+	| errorObject |
+	errorObject := ObjCObject fromHandle: error.
+	^ errorObject localizedDescription UTF8String asByteArray utf8Decoded
+]
+
 { #category : #'as yet unclassified' }
-CocoaNotificationCenter >> requestPermissions [
+UNNotificationCenter >> requestPermissions [
 
 	| sem hasPermissions blk center errorDescription permissions |
 	permissions := 1 << 1 + (1 << 2). "Sound" "Alert"
@@ -102,10 +111,7 @@ CocoaNotificationCenter >> requestPermissions [
 		       block: [ :granted :error |
 			       hasPermissions := granted = 1.
 			       error isNull ifFalse: [
-				       | errorObject |
-				       errorObject := ObjCObject fromHandle: error.
-				       errorDescription := error localizedDescription UTF8String
-					                           asByteArray utf8Decoded ].
+				       errorDescription := self extractErrorDescription: error ].
 			       sem signal ].
 
 	center := self currentNotificationCenter.
@@ -119,7 +125,7 @@ CocoaNotificationCenter >> requestPermissions [
 ]
 
 { #category : #'as yet unclassified' }
-CocoaNotificationCenter >> showNotificationTitle: aTitle body: aBody [
+UNNotificationCenter >> showNotificationTitle: aTitle body: aBody [
 
 	self requestPermissions.
 

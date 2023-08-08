@@ -1,5 +1,5 @@
 Class {
-	#name : #CocoaNotificationCenterDelegate,
+	#name : #UNNotificationCenterDelegate,
 	#superclass : #Object,
 	#instVars : [
 		'proxy'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-CocoaNotificationCenterDelegate >> notificationPresentationOption [
+UNNotificationCenterDelegate >> notificationPresentationOption [
 
 	^ 	UNNotificationPresentationOptions UNNotificationPresentationOptionBadge value
 		| UNNotificationPresentationOptions UNNotificationPresentationOptionBanner value
@@ -17,19 +17,19 @@ CocoaNotificationCenterDelegate >> notificationPresentationOption [
 ]
 
 { #category : #accessing }
-CocoaNotificationCenterDelegate >> proxy [
+UNNotificationCenterDelegate >> proxy [
 
 	^ proxy
 ]
 
 { #category : #accessing }
-CocoaNotificationCenterDelegate >> proxy: anObject [
+UNNotificationCenterDelegate >> proxy: anObject [
 
 	proxy := anObject
 ]
 
 { #category : #'as yet unclassified' }
-CocoaNotificationCenterDelegate >> userNotificationCenter: center didReceiveNotificationResponse: response withCompletionHandler: completionHandler [
+UNNotificationCenterDelegate >> userNotificationCenter: center didReceiveNotificationResponse: response withCompletionHandler: completionHandler [
 
 	<objCSignature: #( void #( id center , id response , void * completionHandler ) )>
 	
@@ -42,7 +42,7 @@ CocoaNotificationCenterDelegate >> userNotificationCenter: center didReceiveNoti
 ]
 
 { #category : #'as yet unclassified' }
-CocoaNotificationCenterDelegate >> userNotificationCenter: center openSettingsForNotification: notification [
+UNNotificationCenterDelegate >> userNotificationCenter: center openSettingsForNotification: notification [
 
 	<objCSignature: #( void #( id center , id notification ) )>
 
@@ -50,7 +50,7 @@ CocoaNotificationCenterDelegate >> userNotificationCenter: center openSettingsFo
 ]
 
 { #category : #'as yet unclassified' }
-CocoaNotificationCenterDelegate >> userNotificationCenter: center willPresentNotification: notification withCompletionHandler: completionHandler [
+UNNotificationCenterDelegate >> userNotificationCenter: center willPresentNotification: notification withCompletionHandler: completionHandler [
 
 	<objCSignature: #( void #( id center , id notification , void* completionHandler ) )>
 
