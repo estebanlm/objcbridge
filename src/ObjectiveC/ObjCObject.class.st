@@ -150,7 +150,7 @@ ObjCObject >> objCPerform: aSEL [
 
 { #category : #accessing }
 ObjCObject >> release [
-	1halt.
+
 	self objCPerform: #release asObjCSelector
 ]
 

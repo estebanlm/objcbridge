@@ -4,8 +4,17 @@ Class {
 	#instVars : [
 		'proxy'
 	],
-	#category : #'ObjectiveC-Cocoa'
+	#category : #'ObjectiveC-Cocoa-Notifications'
 }
+
+{ #category : #'as yet unclassified' }
+CocoaNotificationCenterDelegate >> notificationPresentationOption [
+
+	^ 	UNNotificationPresentationOptions UNNotificationPresentationOptionBadge value
+		| UNNotificationPresentationOptions UNNotificationPresentationOptionBanner value
+		| UNNotificationPresentationOptions UNNotificationPresentationOptionList value 
+		| UNNotificationPresentationOptions UNNotificationPresentationOptionSound value
+]
 
 { #category : #accessing }
 CocoaNotificationCenterDelegate >> proxy [
@@ -24,8 +33,12 @@ CocoaNotificationCenterDelegate >> userNotificationCenter: center didReceiveNoti
 
 	<objCSignature: #( void #( id center , id response , void * completionHandler ) )>
 	
-1halt.
-	thisContext method selector traceCr.
+	"Just Delegating to the default action"
+	
+	| block |
+	
+	block := ObjCExternalBlock fromHandle: completionHandler signature: #(void #()).
+	block valueWithArguments: {}.
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,8 +46,7 @@ CocoaNotificationCenterDelegate >> userNotificationCenter: center openSettingsFo
 
 	<objCSignature: #( void #( id center , id notification ) )>
 
-1halt.
-	thisContext method selector traceCr.
+	"Our App does not provide configuration in App for the settings"
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,5 +57,5 @@ CocoaNotificationCenterDelegate >> userNotificationCenter: center willPresentNot
 	| block |
 	
 	block := ObjCExternalBlock fromHandle: completionHandler signature: #(void #(uint)).
-	block valueWithArguments: { 7 }.
+	block valueWithArguments: { self notificationPresentationOption }.
 ]

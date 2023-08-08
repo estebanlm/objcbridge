@@ -5,7 +5,7 @@ Class {
 		'proxy',
 		'block'
 	],
-	#category : #'ObjectiveC-Cocoa'
+	#category : #'ObjectiveC-Cocoa-Menus'
 }
 
 { #category : #accessing }

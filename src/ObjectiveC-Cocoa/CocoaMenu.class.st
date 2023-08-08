@@ -11,7 +11,7 @@ Class {
 	#classVars : [
 		'MainMenu'
 	],
-	#category : #'ObjectiveC-Cocoa'
+	#category : #'ObjectiveC-Cocoa-Menus'
 }
 
 { #category : #adding }

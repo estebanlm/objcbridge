@@ -10,7 +10,7 @@ Class {
 		'nsShortcut',
 		'menuItem'
 	],
-	#category : #'ObjectiveC-Cocoa'
+	#category : #'ObjectiveC-Cocoa-Menus'
 }
 
 { #category : #accessing }
