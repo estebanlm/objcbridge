@@ -17,13 +17,20 @@ UNNotificationCenter class >> example [
 
 	"To send notifications the application should be signed, for development we can use ad hoc signing with the command: 
 
-	codesign -dv -r- MyApp.app
+	To Sign: codesign --force --deep -s - MyApp.app
+	To Check: codesign -dv -r- MyApp.app
 	
 	"
 
 	UNNotificationCenter uniqueInstance
 		showNotificationTitle: 'I am a notification'
 		body: 'with a nice body'
+]
+
+{ #category : #accessing }
+UNNotificationCenter class >> isAvailable [
+
+	^ #UNUserNotificationCenter inObjC isNull not
 ]
 
 { #category : #accessing }
