@@ -9,5 +9,6 @@ BaselineOfObjCBridge >> baseline: spec [
 	<baseline>
 	
 	spec for: #common do: [
-		spec package: 'ObjectiveC' ].
+		spec package: 'ObjectiveC'.
+		spec pacakge: 'ObjectiveC-Cocoa'].
 ]
