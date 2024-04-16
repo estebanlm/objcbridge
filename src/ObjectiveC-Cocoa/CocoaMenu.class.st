@@ -1,11 +1,15 @@
+"
+I represent an item of a Cocoa Menu.
+I can hold items or submenus.
+"
 Class {
 	#name : #CocoaMenu,
 	#superclass : #Object,
 	#instVars : [
 		'nsMenu',
+		'items',
 		'title',
 		'nsTitle',
-		'items',
 		'menuItem'
 	],
 	#classVars : [
@@ -14,15 +18,23 @@ Class {
 	#category : #'ObjectiveC-Cocoa-Menus'
 }
 
+{ #category : #'instance creation' }
+CocoaMenu class >> with: aNSMenu [
+
+	^ self new
+		setMenu: aNSMenu;
+		yourself
+]
+
 { #category : #adding }
-CocoaMenu >> addItemWithTitle: aString action: aFullBlockClosure [ 
+CocoaMenu >> addItemWithTitle: aString action: aBlock [ 
 	
-	^ self addItemWithTitle: aString action: aFullBlockClosure shortcut: ''
+	^ self addItemWithTitle: aString action: aBlock shortcut: ''
 ]
 
 { #category : #adding }
 CocoaMenu >> addItemWithTitle: aTitle action: actionBlock shortcut: shortcutString [ 
-	
+
 	items add: (CocoaMenuItem new
 						title: aTitle;
 						action: actionBlock;
@@ -31,60 +43,96 @@ CocoaMenu >> addItemWithTitle: aTitle action: actionBlock shortcut: shortcutStri
 ]
 
 { #category : #adding }
-CocoaMenu >> addSubmenu: aTitle with: builderBlock [ 
-	
-	| m |
-	m := self class new.
-	m title: aTitle.
-	builderBlock value: m.
-	items add: m.
-	^ m
+CocoaMenu >> addSeparator [
+
+	items add: CocoaMenuSeparator new
 ]
 
 { #category : #adding }
-CocoaMenu >> addToMenu: aCocoaMenu [ 
+CocoaMenu >> addServicesMenu [
+
+	items add: CocoaServicesMenu new
+]
+
+{ #category : #adding }
+CocoaMenu >> addSubmenu: aTitle with: builderBlock [ 
 	
+	| menu |
+	menu := self class new.
+	menu title: aTitle.
+	builderBlock value: menu.
+	items add: menu.
+	^ menu
+]
+
+{ #category : #private }
+CocoaMenu >> addToMenu: aCocoaMenu [
+	<ignoreNotImplementedSelectors: #(#addItemWithTitle:action:keyEquivalent: #setSubmenu:forItem:)>
+
 	self buildNSMenu.
-	
-	menuItem := aCocoaMenu nsMenu addItemWithTitle: nsTitle action: ObjCObject nil keyEquivalent:'' asNSString.
+	menuItem := aCocoaMenu nsMenu 
+		addItemWithTitle: nsTitle
+		action: ObjCObject nil
+		keyEquivalent: '' asNSString.
 	
 	aCocoaMenu nsMenu setSubmenu: nsMenu forItem: menuItem.
 
 ]
 
-{ #category : #building }
+{ #category : #configuring }
+CocoaMenu >> beMainMenu [
+
+	self buildNSMenu.
+	#NSApplication inObjC sharedApplication setMainMenu: nsMenu.
+	MainMenu := self
+]
+
+{ #category : #private }
 CocoaMenu >> buildNSMenu [
+	<ignoreNotImplementedSelectors: #(#initWithTitle:)>
 	
-	nsTitle := title asNSString.
+	nsTitle := (title ifNil: [ '' ]) asNSString.
 	nsMenu := #NSMenu inObjC alloc initWithTitle: nsTitle.
-	
-	items do: [ :i | i addToMenu: self ].
-	
+	items do: [ :item | item addToMenu: self ].
 	^ nsMenu
 ]
 
 { #category : #initialization }
 CocoaMenu >> initialize [ 
-	
+
 	super initialize.
 	items := OrderedCollection new
 ]
 
 { #category : #accessing }
-CocoaMenu >> nsMenu [
+CocoaMenu >> nsMenu [ 
+
 	^ nsMenu
 ]
 
-{ #category : #initialization }
-CocoaMenu >> setAsMainMenu [
-	
-	self buildNSMenu.
-	#NSApplication inObjC sharedApplication setMainMenu: nsMenu.
+{ #category : #printing }
+CocoaMenu >> printOn: aStream [
+	aStream << self class name << '(' << (title ifNil: [ '' ]) << ')'
+]
 
-	MainMenu := self
+{ #category : #removing }
+CocoaMenu >> removeAllItems [
+
+	nsMenu removeAllItems.
+	
+	self flag: 'TODO: release ObjC menu items'.
+	items := OrderedCollection new.
+	
+]
+
+{ #category : #private }
+CocoaMenu >> setMenu: aNSMenu [
+
+	nsMenu := aNSMenu
 ]
 
 { #category : #accessing }
 CocoaMenu >> title: aString [ 
+
 	title := aString
 ]
