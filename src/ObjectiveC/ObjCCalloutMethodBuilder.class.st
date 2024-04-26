@@ -120,14 +120,30 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: functionSpec [
 	"save ffi call as literal"
 	builder pushLiteral: (self createFFICalloutLiteralFromSpec: functionSpec).
 	"iterate arguments in order (in the function) to create the function call"
-	functionSpec arguments do: [ :each | each emitArgument: builder context: sender inCallout: self requestor ].
+	functionSpec arguments do: [ :each | 
+		each emitArgument: builder context: sender inCallout: self requestor.
+		each resolvedType tfExternalTypeWithArity emitMarshallToPrimitive: builder ].
+
 	"create the array"
 	builder pushConsArray: functionSpec arguments size.
+	builder addTemp: #argumentsArray.
+	builder storeTemp: #argumentsArray.
+
 	"send call and store into result"
 	builder send: #invokeFunction:withArguments:.
 	
-	functionSpec arguments do: [ :each | each emitReturnArgument: builder context: sender ].
+	functionSpec arguments withIndexDo: [ :each :index|
+		each emitReturnArgument: builder context: sender.
+		each resolvedType tfExternalTypeWithArity
+			emitFreeIfNeededOfIndex: index
+			argumentsArrayTempName: #argumentsArray
+			withBuilder: builder  ].
+
+	"Additional marshall in the case of TFFI"
+	functionSpec returnType resolvedType tfExternalTypeWithArity emitMarshallFromPrimitive: builder.
+
 	"convert in case return type needs it. And return reseult"
+
 	^ functionSpec returnType
 		emitReturn: builder
 		resultTempVar: #result

@@ -9,6 +9,9 @@ Class {
 	#instVars : [
 		'isa'
 	],
+	#classVars : [
+		'OBJ_PTR'
+	],
 	#category : #'ObjectiveC-Core'
 }
 
@@ -40,6 +43,18 @@ ObjCObject >> descriptionString [
 	^ self description UTF8String
 ]
 
+{ #category : #private }
+ObjCObject >> doGetInstanceVariable: aName in: returnValue [
+	
+	self ffiCall: #(void* object_getInstanceVariable(self, char * aName, void* returnValue))
+]
+
+{ #category : #private }
+ObjCObject >> doSetInstanceVariable: aName to: aValue [
+	
+	self ffiCall: #(void* object_setInstanceVariable(self, char * aName, void* aValue))
+]
+
 { #category : #'reflective operations' }
 ObjCObject >> doesNotUnderstand: aMessage [
 	| shadowMethod arguments |
@@ -50,6 +65,18 @@ ObjCObject >> doesNotUnderstand: aMessage [
 	^ shadowMethod 
 		valueWithReceiver: self
 		arguments: arguments
+]
+
+{ #category : #private }
+ObjCObject >> getInstanceVariable: aName [
+
+	| returnValue |
+	OBJ_PTR := FFIExternalValueHolder ofType: 'void *'.
+	returnValue := OBJ_PTR new value: ExternalAddress null.	
+
+	self doGetInstanceVariable: aName in: returnValue.
+	
+	^ ObjCObject fromHandle: returnValue value.
 ]
 
 { #category : #private }
@@ -123,5 +150,14 @@ ObjCObject >> objCPerform: aSEL [
 
 { #category : #accessing }
 ObjCObject >> release [
+
 	self objCPerform: #release asObjCSelector
+]
+
+{ #category : #private }
+ObjCObject >> setInstanceVariable: aName to: aValue [
+
+	self doSetInstanceVariable: aName to: aValue.
+	
+	^ self
 ]
