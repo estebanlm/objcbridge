@@ -91,10 +91,11 @@ ObjCCalloutMethodBuilder >> generateFFICallout: builder spec: functionSpec [
 	| properties |
 
 	"Copy the properties of the old method"
-	sender methodProperties ifNotNil: [ 
-		properties := sender methodProperties copy.
-		properties method: nil.
-		builder properties: properties ].
+	sender compiledCode ifNotNil: [ :compiledCode |
+		compiledCode properties ifNotNil: [ 
+			properties := compiledCode properties copy.
+			properties method: nil.
+			builder properties: properties ] ].
 
 	builder
 		numArgs: self argumentNames size;
